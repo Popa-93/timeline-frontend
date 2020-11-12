@@ -26,7 +26,7 @@ function App() {
       iconStyle={{ background: '#ff0000', color: '#0000ff' }}
       icon={<WorkIcon />}
     >
-      <h3 className="vertical-timeline-element-title">Popa93</h3>
+      <h3 className="vertical-timeline-element-title">Podfjklgjdfsklgjdfkljgklsdfjgklpa93</h3>
       <h4 className="vertical-timeline-element-subtitle">Pop!</h4>
       <p>
         Blabla bla!
