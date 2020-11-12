@@ -26,10 +26,10 @@ function App() {
       iconStyle={{ background: '#ff0000', color: '#0000ff' }}
       icon={<WorkIcon />}
     >
-      <h3 className="vertical-timeline-element-title">Creative Director</h3>
-      <h4 className="vertical-timeline-element-subtitle">Miami, FL</h4>
+      <h3 className="vertical-timeline-element-title">Popa93</h3>
+      <h4 className="vertical-timeline-element-subtitle">Pop!</h4>
       <p>
-        Creative Direction, User Experience, Visual Design, Project Management, Team Leading
+        Blabla bla!
       </p>
     </VerticalTimelineElement>
     <VerticalTimelineElement
