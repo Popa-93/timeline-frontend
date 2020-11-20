@@ -1,50 +1,55 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+
+//TODO Check if it does not import all fonts during Bundle + clarify "Theme-ing"
+//TODO -> Pas d'impact! import 'fontsource-roboto'; 
+
 import './App.css';
 
-import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
+import SkillSelector from './SkillSelector'
+import Timeline from './Timeline'
 
-function WorkIcon() {
-  return (
-    <fragment>
-      <img src={logo} alt="Work Icon"/>
-      <img src={logo} alt="Work Icon"/>
-    </fragment>);
-}
-function SchoolIcon() {
-  return <img src={logo} alt="School Icon"/>;
+
+const fakeData = {
+  activitiesName : [ "Python", "Django", "HTML,CSS", "Javascript", "REACT" ],
+  records : [
+    {
+      date : "2010 - 2011",
+      title : "Python basics",
+      subtitle: "Learning & Katas",
+      desc : "Reading docs, following tutorials and practicing katas on Codewars",
+      activitiesName: "Python",
+    },
+    {
+      date : "2009 - 2010",
+      title : "Django basics",
+      subtitle: "Learning",
+      desc : "Reading docs, following tutorials",
+      activitiesName: "Django",
+     },
+     {
+      date : "2010 - 2011",
+      title : '"Back" to  web basics : HTML, CSS',
+      subtitle: "Learning HTML",
+      desc : "Reading docs on w3school. Now I know there is also MDN, but anyway it was a good introduction.",
+      activitiesName: "HTML,CSS",
+    },
+  ]
 }
 
 function App() {
 
+  const [filter, setFilter] = useState(fakeData.activitiesName);
 
   return (
-  <VerticalTimeline>
-    <VerticalTimelineElement
-      className="vertical-timeline-element--work"
-      date="2009"
-      iconStyle={{ background: '#ff0000', color: '#0000ff' }}
-      icon={<WorkIcon />}
-    >
-      <h3 className="vertical-timeline-element-title">Podfjklgjdfsklgjdfkljgklsdfjgklpa93</h3>
-      <h4 className="vertical-timeline-element-subtitle">Pop!</h4>
-      <p>
-        Blabla bla!
-      </p>
-    </VerticalTimelineElement>
-    <VerticalTimelineElement
-      className="vertical-timeline-element--school"
-      date="2010 - 2011"
-      iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-      icon={<SchoolIcon />}
-    >
-      <h3 className="vertical-timeline-element-title">Art Director</h3>
-      <h4 className="vertical-timeline-element-subtitle">San Francisco, CA</h4>
-      <p>
-        Creative Direction, User Experience, Visual Design, SEO, Online Marketing
-      </p>
-    </VerticalTimelineElement>
-  </VerticalTimeline>
+      <>
+        <SkillSelector activitiesName={fakeData.activitiesName}
+          filter={filter}
+          setFilter={setFilter} >
+        </SkillSelector>
+        <Timeline records={fakeData.records} filter={filter}> </Timeline>
+      </>
+ 
+  
   );
 }
 
