@@ -8,57 +8,99 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Checkbox from '@material-ui/core/Checkbox';
 import Avatar from '@material-ui/core/Avatar';
 
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
 const useStyles = makeStyles((theme) => ({
     skillselector: {
+        position: "relative",
         border: "1px solid black",
         flexGrow: "0",     /* do not grow   - initial value: 0 */
         flexShrink: "0",   /* do not shrink - initial value: 1 */
         //flexBasis: "30rem", /* width/height  - initial value: auto */
         backgroundColor: theme.palette.background.paper,
-        }
+        },
+    fab : {
+        width : "2rem",
+        height: "Auto",
+        position : "absolute",
+        right: 0,
+        bottom: "-1rem",
+    }
+    
   }));
 
 export default function SkillSelector(props) {
     const classes = useStyles();
 
     
-    const handleToggle = (value) => () => {
-        const currentIndex = props.filter.indexOf(value);
+    const handleToggle = (activityId) => () => {
+        const currentIndex = props.filter.indexOf(activityId);
         const newFilter = [...props.filter];
 
         if (currentIndex === -1)
             {
-            newFilter.push(value);
+            newFilter.push(activityId);
             } else {
             newFilter.splice(currentIndex, 1);
             }
         props.setFilter(newFilter);
         };
+    /*
+    updateActivity
+        fetch(`${process.env.REACT_APP_BASE_URL}/activities/ID`,
+        method: 'PUT'
+    delete 
+        fetch(`${process.env.REACT_APP_BASE_URL}/activities/ID`,
+        DELETE
+    */
+
+    const newActivity = (e)=> {
+        e.preventDefault();
+        return;
+        fetch(`${process.env.REACT_APP_BASE_URL}/activities`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  //  "name" : name
+                    })
+            })
+            .then(response => response.json())
+            .then(response => console.log('response:', response));
+            
+        console.log("New activity created")
+        };
 
     return (
         <List dense className={classes.skillselector}>
-            {props.activitiesName.map((value) => {
-                const labelId = `checkbox-list-secondary-label-${value}`;
+            {props.activities.map((activity) => {
+                const labelId = `checkbox-list-secondary-label-${activity.name}`;
                 return (
-                    <ListItem key={value} button>
+                    <ListItem key={activity.id} button>
                         <ListItemAvatar>
                             <Avatar
-                                alt={value}
-                                src={`${process.env.PUBLIC_URL}/images/skills/${value}.png`}
+                                alt={activity.name}
+                                src={`${process.env.PUBLIC_URL}/images/skills/${activity.name}.png`}
                             />
                         </ListItemAvatar>
-                        <ListItemText id={labelId} primary={value} />
+                        <ListItemText id={labelId} primary={activity.name} />
                         <ListItemSecondaryAction>
                             <Checkbox
                                 edge="end"
-                                onChange={handleToggle(value)}
-                                checked={props.filter.includes(value)}
+                                onChange={handleToggle(activity.id)}
+                                checked={props.filter && props.filter.includes(activity.id)}
                                 inputProps={{ 'aria-labelledby': labelId }}
                             />
                         </ListItemSecondaryAction>
                     </ListItem>
                     );
                 })}
+            <Fab color="primary" aria-label="add" className={classes.fab}>
+                <AddIcon
+                    onClick={newActivity}
+                />
+            </Fab>
         </List>
         );
     }

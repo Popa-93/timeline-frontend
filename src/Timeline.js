@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
 
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
@@ -14,14 +15,32 @@ const useStyles = makeStyles((theme) => ({
 
 function Timeline (props) {
   const classes = useStyles();
+
+  const [records, setRecords] = useState([]);
+
+  useEffect( () => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/records`)
+      .then(res => res.json())
+      .then(
+        (results) => { 
+          setRecords(results);
+          },
+        (error) => {
+          console.log("Error during records initialization fetch :", error);
+          })
+      //TODO add error processing and !!!! timeout handling !!!!
+  }, []);
+
   return (
     <VerticalTimeline className= {classes.timeline}>
-      {props.records
-        .filter((record) => props.filter.includes(record.activitiesName))
+      {records
+        .filter((record) => 
+          record.activities.filter( (activity) => props.filter.includes(activity) ).length
+          )
         .map((record) => {
         return (
         <VerticalTimelineElement
-          key = {record.title} //TODO change for BDD UID
+          key = {record.id}
           className="vertical-timeline-element--school"
           date={record.date}
           iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}

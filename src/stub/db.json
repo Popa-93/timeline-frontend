@@ -1,0 +1,50 @@
+{
+  "activities": [
+    {
+      "id": 1,
+      "name": "Python"
+    },
+    {
+      "name": "Django",
+      "id": 2
+    },
+    {
+      "id": 3,
+      "name": "HTML,CSS"
+    },
+    {
+      "id": 4,
+      "name": "Javascript"
+    },
+    {
+      "id": 5,
+      "name": "REACT"
+    }
+  ],
+  "records": [
+    {
+      "id" : 1,
+      "date": "2010 - 2011",
+      "title": "Python basics",
+      "subtitle": "Learning & Katas",
+      "desc": "Reading docs, following tutorials and practicing katas on Codewars",
+      "activities": [1]
+    },
+    {
+      "id" : 2,
+      "date": "2009 - 2010",
+      "title": "Django basics",
+      "subtitle": "Learning",
+      "desc": "Reading docs, following tutorials",
+      "activities": [1, 2]
+    },
+    {
+      "id " : 3,
+      "date": "2010 - 2011",
+      "title": "Back to  web basics : HTML, CSS",
+      "subtitle": "Learning HTML",
+      "desc": "Reading docs on w3school. Now I know there is also MDN, but anyway it was a good introduction.",
+      "activities": [3]
+    }
+  ]
+}
