@@ -1,5 +1,14 @@
 #root {
+  margin: 1rem;
   display: flex;
+  flex-flow: column nowrap;
   align-items: center;
-  justify-content: center;  
+  justify-content: center;
+}
+
+.user-ident {
+  align-self: flex-end;
+}
+
+.main {
 }
