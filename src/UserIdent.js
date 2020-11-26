@@ -7,15 +7,23 @@ import Dialog from "@material-ui/core/Dialog";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { styled } from "@material-ui/core/styles";
 import { spacing } from "@material-ui/system";
 
 const StyledTypography = styled(Typography)(spacing);
 const StyledButton = styled(Button)(spacing);
 
+const useStyles = makeStyles((theme) => ({
+  scrollPaper: {
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+  },
+}));
+
 function LogoutDialog(props) {
   const theme = useTheme();
+  const classes = useStyles();
 
   const { signOut } = useGoogleLogout({
     clientId:
@@ -28,10 +36,13 @@ function LogoutDialog(props) {
 
   return (
     <Dialog
+      classes={{ scrollPaper: classes.scrollPaper }}
       aria-labelledby="simple-dialog-title"
       open={props.open}
       onClose={props.onClose}
-      style={{ textAlign: "center" }}
+      style={{
+        textAlign: "center",
+      }}
     >
       <DialogTitle
         id="simple-dialog-title"
@@ -66,6 +77,7 @@ export default function UserIdent(props) {
   const [open, setOpen] = useState(false);
   const [googleUserObj, setGoogleUserObj] = useState();
 
+  //TODO useMemo
   let userIdentRender;
   if (googleUserObj) {
     userIdentRender = (
