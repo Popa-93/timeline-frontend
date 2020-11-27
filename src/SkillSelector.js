@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,6 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import IdentContext from "./App";
 
 const useStyles = makeStyles((theme) => ({
   skillselector: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SkillSelector(props) {
   const classes = useStyles();
+  const ident = useContext(IdentContext);
 
   const handleToggle = (activityId) => () => {
     const currentIndex = props.filter.indexOf(activityId);
@@ -43,14 +45,6 @@ export default function SkillSelector(props) {
     }
     props.setFilter(newFilter);
   };
-  /*
-    updateActivity
-        fetch(`${process.env.REACT_APP_BASE_URL}/activities/ID`,
-        method: 'PUT'
-    delete 
-        fetch(`${process.env.REACT_APP_BASE_URL}/activities/ID`,
-        DELETE
-    */
 
   const newActivity = (e) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { GoogleLogin, useGoogleLogout } from "react-google-login";
 import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -10,6 +10,8 @@ import Button from "@material-ui/core/Button";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { styled } from "@material-ui/core/styles";
 import { spacing } from "@material-ui/system";
+
+import { IdentContext } from "./App";
 
 const StyledTypography = styled(Typography)(spacing);
 const StyledButton = styled(Button)(spacing);
@@ -24,10 +26,10 @@ const useStyles = makeStyles((theme) => ({
 function LogoutDialog(props) {
   const theme = useTheme();
   const classes = useStyles();
+  const { ident } = useContext(IdentContext);
 
   const { signOut } = useGoogleLogout({
-    clientId:
-      "614074181352-mr1i43q42ace1so4p10rm0pr2723iu7e.apps.googleusercontent.com",
+    clientId: process.env.REACT_APP_GOOGLE_APP_CLIENTID,
     onLogoutSuccess: () => {
       props.onLogout();
       props.onClose();
@@ -49,16 +51,16 @@ function LogoutDialog(props) {
         style={{ display: "flex", justifyContent: "center" }}
       >
         <Avatar
-          alt={props.googleUser.name}
-          src={props.googleUser.imageUrl}
+          alt={ident.profileObj.name}
+          src={ident.profileObj.imageUrl}
           style={{ width: theme.spacing(7), height: theme.spacing(7) }}
         ></Avatar>
       </DialogTitle>
       <StyledTypography px={1} variant="subtitle2">
-        {props.googleUser.name}
+        {ident.profileObj.name}
       </StyledTypography>
       <StyledTypography px={1} variant="body2">
-        {props.googleUser.email}
+        {ident.profileObj.email}
       </StyledTypography>
       <StyledButton
         variant="outlined"
@@ -74,45 +76,45 @@ function LogoutDialog(props) {
 }
 
 export default function UserIdent(props) {
-  const [open, setOpen] = useState(false);
-  const [googleUserObj, setGoogleUserObj] = useState();
+  const [logoutDialogOpened, setLogoutDialogOpened] = useState(false);
+  const { ident, setIdent } = useContext(IdentContext);
 
   //TODO useMemo
   let userIdentRender;
-  if (googleUserObj) {
+  if (ident) {
     userIdentRender = (
       <>
         <Tooltip
           title=<div>
-            <div>{googleUserObj.profileObj.name}</div>
-            <div>{googleUserObj.profileObj.email}</div>
+            <div>{ident.profileObj.name}</div>
+            <div>{ident.profileObj.email}</div>
           </div>
         >
           <Avatar
-            alt={googleUserObj.profileObj.name}
-            src={googleUserObj.profileObj.imageUrl}
-            onClick={() => setOpen(true)}
+            alt={ident.profileObj.name}
+            src={ident.profileObj.imageUrl}
+            onClick={() => setLogoutDialogOpened(true)}
             style={{ position: "relative" }}
           ></Avatar>
         </Tooltip>
         <LogoutDialog
-          open={open}
-          onClose={() => setOpen(false)}
-          onLogout={() => setGoogleUserObj(null)}
-          googleUser={googleUserObj.profileObj}
+          open={logoutDialogOpened}
+          onClose={() => setLogoutDialogOpened(false)}
+          onLogout={() => setIdent(null)}
+          googleUser={ident.profileObj}
         />
       </>
     );
   } else {
     userIdentRender = (
       <GoogleLogin
-        clientId="614074181352-mr1i43q42ace1so4p10rm0pr2723iu7e.apps.googleusercontent.com"
+        clientId={process.env.REACT_APP_GOOGLE_APP_CLIENTID}
         buttonText="Login"
         onSuccess={(receivedObj) => {
-          setGoogleUserObj(receivedObj);
-          console.log("googleId ", receivedObj.profileObj.googleId);
+          setIdent(receivedObj);
+          console.log("GoogleLogin : googleObj ", receivedObj); //TODO remove
         }}
-        onFailure={() => setGoogleUserObj(null)}
+        onFailure={() => setIdent(null)}
         cookiePolicy={"single_host_origin"}
       ></GoogleLogin>
     );
