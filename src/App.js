@@ -15,7 +15,7 @@ import Timeline from "./Timeline";
 export const IdentContext = React.createContext({
   ident: null,
   setIdent: () => {},
-}); //TODO Move this (somewhere?)
+});
 
 function App() {
   const [filter, setFilter] = useState([]);
@@ -25,7 +25,7 @@ function App() {
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
 
-  //TODO Note the right place, move this in SkillSelector
+  //TODO Not the right place, move this in SkillSelector
   // CAre to separate filter and activity list
   useEffect(() => {
     fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities`)
@@ -45,7 +45,10 @@ function App() {
           setActivities(response.results);
         },
         (error) => {
-          console.log("Error during activities initialization fetch :", error);
+          throw new Error(
+            "Error during activities initialization fetch :",
+            error
+          );
         }
       );
     //TODO add error processing and !!!! timeout handling !!!!

@@ -34,7 +34,7 @@ function Timeline(props) {
           setIsLoading(false);
         },
         (error) => {
-          console.log("Error during records initialization fetch :", error);
+          throw new Error("Error during records initialization fetch :", error);
           // TODO Display image in place of component using missing datas
           setIsLoading(false);
         }
