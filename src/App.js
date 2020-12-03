@@ -32,10 +32,14 @@ function App() {
       .then((response) => {
         console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
         if (!response.ok) {
+          /*
           throw new Error(
             `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities return status ` +
               response.status
           );
+          //Reactivate after moving it in an error boundary
+          */
+          throw "Baaa"; // TODO remove
         }
         return response.json();
       })
@@ -45,10 +49,13 @@ function App() {
           setActivities(response.results);
         },
         (error) => {
+          /*
           throw new Error(
             "Error during activities initialization fetch :",
             error
           );
+                //Reactivate after moving it in an error boundary
+               */
         }
       );
     //TODO add error processing and !!!! timeout handling !!!!
