@@ -48,6 +48,7 @@ export default function UserIdent(props) {
 
           fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/auth/google/`, {
             method: "POST",
+            credentials: "include",
             headers: {
               accept: "*/*",
               "content-type": "application/json",

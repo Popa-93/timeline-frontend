@@ -28,13 +28,15 @@ function App() {
   //TODO Not the right place, move this in SkillSelector
   // CAre to separate filter and activity list
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities`)
+    fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
+      credentials: "include",
+    })
       .then((response) => {
         console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
         if (!response.ok) {
           /*
           throw new Error(
-            `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities return status ` +
+            `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
               response.status
           );
           //Reactivate after moving it in an error boundary
