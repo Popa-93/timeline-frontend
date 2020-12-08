@@ -23,11 +23,47 @@ const useStyles = makeStyles((theme) => ({
 export default function LogoutDialog(props) {
   const theme = useTheme();
   const classes = useStyles();
-  const { ident } = useContext(IdentContext);
+  const { ident, setIdent } = useContext(IdentContext);
 
   const { signOut } = useGoogleLogout({
     clientId: process.env.REACT_APP_GOOGLE_APP_CLIENTID,
     onLogoutSuccess: () => {
+      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/logout/`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          accept: "*/*",
+          "content-type": "application/json",
+        },
+        body: "{}",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            // TODO Cleanup this crap and manage asynch log cleanly
+            console.log("** LOGOUT ON BACKEND ** KO");
+            console.log(
+              "Response status ",
+              response.status + " \n text " + response.statusText
+            );
+            response.text().then(function (text) {
+              console.log("TXT =", text);
+            });
+
+            throw new Error(
+              `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/auth/google/ return status ` +
+                response.status
+            );
+          }
+          return response.json();
+        })
+        .then(
+          (response) => {
+            setIdent(null);
+          },
+          (error) => {
+            console.warn("Error during logout on backend : ", error);
+          }
+        );
       props.onLogout();
       props.onClose();
     },
