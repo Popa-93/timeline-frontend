@@ -80,8 +80,9 @@ export default function UserIdent(props) {
             })
             .then(
               (response) => {
-                setIdent(receivedObj); //Once the authent is done on backend
-                return response.results; //TODO
+                console.log("setIdent to ", receivedObj);
+                setIdent(receivedObj);
+                return response.results;
               },
               (error) => {
                 throw new Error("Error during auth on backend : ", error);

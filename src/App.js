@@ -10,7 +10,7 @@ import "./App.css";
 import ErrorBoundary from "./ErrorBoundary";
 import UserIdent from "./UserIdent";
 import SkillSelector from "./SkillSelector";
-import Timeline from "./Timeline";
+import ActivitiesFollowup from "./ActivitiesFollowup";
 
 export const IdentContext = React.createContext({
   ident: null,
@@ -28,39 +28,38 @@ function App() {
   //TODO Not the right place, move this in SkillSelector
   // CAre to separate filter and activity list
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
-      credentials: "include",
-    })
-      .then((response) => {
-        console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
-        if (!response.ok) {
-          /*
-          throw new Error(
-            `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
-              response.status
-          );
-          //Reactivate after moving it in an error boundary
-          */
-          throw "Baaa"; // TODO remove
-        }
-        return response.json();
+    if (ident === null) {
+      setActivities(null);
+    } else {
+      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
+        credentials: "include",
       })
-      .then(
-        (response) => {
-          setFilter(response.results.map((activity) => activity.id));
-          setActivities(response.results);
-        },
-        (error) => {
-          /*
-          throw new Error(
-            "Error during activities initialization fetch :",
-            error
-          );
-                //Reactivate after moving it in an error boundary
-               */
-        }
-      );
-    //TODO add error processing and !!!! timeout handling !!!!
+        .then((response) => {
+          console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
+          if (!response.ok) {
+            setActivities(null);
+            console.warn(
+              `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
+                response.status
+            );
+          }
+          return response.json();
+        })
+        .then(
+          (response) => {
+            console.log("** OK ** SET ACTIVITIES AND FILTERS ** ");
+            setFilter(response.results.map((activity) => activity.id));
+            setActivities(response.results);
+          },
+          (error) => {
+            setActivities(null);
+            console.warn(
+              "Error during activities initialization fetch :",
+              error
+            );
+          }
+        );
+    }
   }, [ident]);
 
   return (
@@ -74,20 +73,19 @@ function App() {
         <ErrorBoundary>
           <UserIdent />
         </ErrorBoundary>
-        <div className="main">
-          <ErrorBoundary>
+        <div>
+          {/* <ErrorBoundary>
             <SkillSelector
               activities={activities}
               filter={filter}
               setFilter={setFilter}
             ></SkillSelector>
             <p>{ident ? "Identified" : "No ident"}</p>
-          </ErrorBoundary>
-          {/*
+          </ErrorBoundary> */}
+
           <ErrorBoundary>
-            <Timeline filter={filter} />
+            <ActivitiesFollowup filter={filter} />
           </ErrorBoundary>
-          */}
         </div>
       </ThemeProvider>
     </IdentContext.Provider>

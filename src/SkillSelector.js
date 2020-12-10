@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,7 +10,9 @@ import Avatar from "@material-ui/core/Avatar";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import IdentContext from "./App";
+//import IdentContext from "./App";
+
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   skillselector: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SkillSelector(props) {
   const classes = useStyles();
-  const ident = useContext(IdentContext);
+  //const ident = useContext(IdentContext); //TODO Use for add or remove
 
   const handleToggle = (activityId) => () => {
     const currentIndex = props.filter.indexOf(activityId);
@@ -48,47 +50,54 @@ export default function SkillSelector(props) {
 
   const newActivity = (e) => {
     e.preventDefault();
-    return; //TODO implement add via REST
-    fetch(`${process.env.REACT_APP_BASE_URL}/activities`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        //  "name" : name
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => console.log("response:", response));
+    //TODO implement add via REST
+    // fetch(`${process.env.REACT_APP_BASE_URL}/activities`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     //  "name" : name
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((response) => console.log("response:", response));
 
-    console.log("New activity created");
+    // console.log("New activity created");
   };
 
   return (
     <List dense className={classes.skillselector}>
-      {props.activities.map((activity) => {
-        const labelId = `checkbox-list-secondary-label-${activity.name}`;
-        return (
-          <ListItem key={activity.id} button>
-            <ListItemAvatar>
-              <Avatar
-                alt={activity.name}
-                src={`${process.env.PUBLIC_URL}/images/skills/${activity.name}.png`}
-              />
-            </ListItemAvatar>
-            <ListItemText id={labelId} primary={activity.name} />
-            <ListItemSecondaryAction>
-              <Checkbox
-                edge="end"
-                onChange={handleToggle(activity.id)}
-                checked={props.filter && props.filter.includes(activity.id)}
-                inputProps={{ "aria-labelledby": labelId }}
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
+      {props.activities &&
+        props.activities.map((activity) => {
+          const labelId = `checkbox-list-secondary-label-${activity.name}`;
+          return (
+            <ListItem key={activity.id} button>
+              <ListItemAvatar>
+                <Avatar
+                  alt={activity.name}
+                  src={`${process.env.PUBLIC_URL}/images/skills/${activity.name}.png`}
+                />
+              </ListItemAvatar>
+              <ListItemText id={labelId} primary={activity.name} />
+              <ListItemSecondaryAction>
+                <Checkbox
+                  edge="end"
+                  onChange={handleToggle(activity.id)}
+                  checked={props.filter && props.filter.includes(activity.id)}
+                  inputProps={{ "aria-labelledby": labelId }}
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
       <Fab color="primary" aria-label="add" className={classes.fab}>
         <AddIcon onClick={newActivity} />
       </Fab>
     </List>
   );
 }
+
+SkillSelector.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.number).isRequired,
+  filter: PropTypes.arrayOf(PropTypes.number).isRequired,
+  setFilter: PropTypes.func.isRequired,
+};

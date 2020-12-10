@@ -10,6 +10,8 @@ import { styled } from "@material-ui/core/styles";
 import { spacing } from "@material-ui/system";
 import { IdentContext } from "./App";
 
+import PropTypes from "prop-types";
+
 const StyledTypography = styled(Typography)(spacing);
 const StyledButton = styled(Button)(spacing);
 
@@ -48,7 +50,7 @@ export default function LogoutDialog(props) {
             response.text().then(function (text) {
               console.log("TXT =", text);
             });
-
+            setIdent(null);
             throw new Error(
               `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/auth/google/ return status ` +
                 response.status
@@ -61,6 +63,7 @@ export default function LogoutDialog(props) {
             setIdent(null);
           },
           (error) => {
+            setIdent(null);
             console.warn("Error during logout on backend : ", error);
           }
         );
@@ -107,3 +110,9 @@ export default function LogoutDialog(props) {
     </Dialog>
   );
 }
+
+LogoutDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
+};
