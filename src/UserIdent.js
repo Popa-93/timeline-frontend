@@ -84,8 +84,10 @@ export default function UserIdent(props) {
                 setIdent(receivedObj);
                 return response.results;
               },
+
               (error) => {
-                throw new Error("Error during auth on backend : ", error);
+                //TODO correct this with await to allow ErrorBoundary (usecase no server)
+                console.error("Error during auth on backend : ", error);
               }
             );
         }}

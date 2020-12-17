@@ -15,16 +15,15 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 
 import { IdentContext } from "./App";
+import PrettyDateDisplay from "./PrettyDateDisplay";
 
 const useStyles = makeStyles((theme) => ({
+  main: {
+    width: "80%",
+  },
   itemcontent: {
     textAlign: "left",
     //TODO Add header de couleur + activité = couleur
-  },
-  displaydate: {
-    writingMode: "vertical-rl",
-    textOrientation: "mixed",
-    backgroundColor: "blue",
   },
 }));
 
@@ -74,20 +73,7 @@ function ActivitiesFollowup(props) {
             .map((record) => (
               <TimelineItem>
                 <TimelineOppositeContent>
-                  <Typography
-                    className={classes.displaydate}
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    {record.date}
-                  </Typography>
-
-                  {/* <div class="postdate">
-                    <div class="month">Jun</div>
-                    <div class="day">30</div>
-                    <div class="year">2009</div>
-                  </div> */}
-
+                  <PrettyDateDisplay date={record.date} />
                   {/* //TODO Sprite date */}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
