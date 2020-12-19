@@ -9,10 +9,10 @@ import "./App.css";
 
 import { Grid, Typography } from "@material-ui/core";
 import ErrorBoundary from "./ErrorBoundary";
+import Title from "./Title";
 import UserIdent from "./UserIdent";
 import ActivityFilter from "./ActivityFilter";
 import ActivitiesFollowup from "./ActivitiesFollowup";
-import Input from "@material-ui/core/Input";
 
 export const IdentContext = React.createContext({
   ident: null,
@@ -25,8 +25,6 @@ function App() {
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
-
-  //TODO fetch Title
 
   return (
     <IdentContext.Provider
@@ -47,30 +45,24 @@ function App() {
             xs={12}
             //TODO Replace % with police size + margin for header/footer + other auto
             //typography.fontsize?
-            style={{ border: "1px solid black", height: "10%" }}
+            style={{ border: "1px solid black", height: "40px" }}
+            //previous 10%
             container
           >
-            <Grid item xs={1}>
+            <Grid item xs={1} style={{ height: "40px" }}>
               <p>TODO Menu/icon</p>
             </Grid>
-            <Grid item xs={1} style={{ border: "1px solid black" }} />
-            <Grid item xs={8}>
-              <form noValidate autoComplete="off">
-                <Input
-                  fullWidth
-                  margin="dense"
-                  //id
-                  //value
-                  //onChange //A voir après test du submit, sinon debounce puis call
-                  //onSubmit={this.persistWinner}
-                  required
-                  placeholder="Titre de la timeline"
-                  inputProps={{ "aria-label": "Titre de la timeline" }}
-                />
-                {/* //TODO i18n */}
-              </form>
+            <Grid item xs={1} style={{ height: "40px" }} />
+            <Grid
+              item
+              xs={8}
+              container
+              alignItems="flex-center"
+              style={{ height: "40px" }}
+            >
+              <Title />
             </Grid>
-            <Grid item xs={1} style={{ border: "1px solid black" }} />
+            <Grid item xs={1} style={{ height: "40px" }} />
             <Grid item xs={1}>
               <ErrorBoundary>
                 <UserIdent />

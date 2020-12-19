@@ -16,7 +16,7 @@ import CrossOverIcon from "./crossOverIcon.svg";
 const useStyles = makeStyles((theme) => ({
   activityFilter: {
     position: "relative",
-    border: "1px solid black",
+    //border: "1px solid black",
     flexGrow: "0" /* do not grow   - initial value: 0 */,
     flexShrink: "0" /* do not shrink - initial value: 1 */,
     minWidth: "60px",
@@ -98,17 +98,22 @@ export default function ActivityFilter(props) {
   return (
     <Fragment>
       <List className={classes.activityFilter}>
-        <ListItem key="filter_icon_key">
-          <Tooltip
-            title="Filtrer par activité" //TODO Add i18n
-            placement="right"
-            TransitionProps={{ timeout: 600 }}
+        <Tooltip
+          title="Filtrer par activité" //TODO Add i18n
+          placement="right"
+          TransitionProps={{ timeout: 600 }}
+        >
+          <SvgIcon
+            style={{
+              padding: "0",
+              margin: "2",
+              position: "relative",
+              bottom: "-16px",
+            }}
           >
-            <SvgIcon style={{ padding: "0", margin: "0" }}>
-              <FilterIcon />
-            </SvgIcon>
-          </Tooltip>
-        </ListItem>
+            <FilterIcon />
+          </SvgIcon>
+        </Tooltip>
         {activities &&
           activities.map((activity) => {
             return (
