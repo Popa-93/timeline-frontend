@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -7,11 +7,12 @@ import {
 
 import "./App.css";
 
-import { Grid, Paper, Typography, Toolbar } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import ErrorBoundary from "./ErrorBoundary";
 import UserIdent from "./UserIdent";
-import SkillSelector from "./SkillSelector";
+import ActivityFilter from "./ActivityFilter";
 import ActivitiesFollowup from "./ActivitiesFollowup";
+import Input from "@material-ui/core/Input";
 
 export const IdentContext = React.createContext({
   ident: null,
@@ -19,50 +20,13 @@ export const IdentContext = React.createContext({
 });
 
 function App() {
-  const [filter, setFilter] = useState([]);
-  const [activities, setActivities] = useState([]);
   const [ident, setIdent] = useState(null);
+  const [filter, setFilter] = useState([]);
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
 
-  //TODO Not the right place, move this in SkillSelector
-  // CAre to separate filter and activity list
-
-  useEffect(() => {
-    if (ident === null) {
-      setActivities(null);
-    } else {
-      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
-        credentials: "include",
-      })
-        .then((response) => {
-          console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
-          if (!response.ok) {
-            setActivities(null);
-            console.warn(
-              `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
-                response.status
-            );
-          }
-          return response.json();
-        })
-        .then(
-          (response) => {
-            console.log("** OK ** SET ACTIVITIES AND FILTERS ** ");
-            setFilter(response.results.map((activity) => activity.id));
-            setActivities(response.results);
-          },
-          (error) => {
-            setActivities(null);
-            console.warn(
-              "Error during activities initialization fetch :",
-              error
-            );
-          }
-        );
-    }
-  }, [ident]);
+  //TODO fetch Title
 
   return (
     <IdentContext.Provider
@@ -91,9 +55,20 @@ function App() {
             </Grid>
             <Grid item xs={1} style={{ border: "1px solid black" }} />
             <Grid item xs={8}>
-              <Typography variant="h3">
-                TODO Ma timeline(editable direct)
-              </Typography>
+              <form noValidate autoComplete="off">
+                <Input
+                  fullWidth
+                  margin="dense"
+                  //id
+                  //value
+                  //onChange //A voir après test du submit, sinon debounce puis call
+                  //onSubmit={this.persistWinner}
+                  required
+                  placeholder="Titre de la timeline"
+                  inputProps={{ "aria-label": "Titre de la timeline" }}
+                />
+                {/* //TODO i18n */}
+              </form>
             </Grid>
             <Grid item xs={1} style={{ border: "1px solid black" }} />
             <Grid item xs={1}>
@@ -111,13 +86,11 @@ function App() {
           >
             <Grid item xs={1} container justify="center" alignItems="center">
               <Grid item xs={12}>
-                <ErrorBoundary>
-                  <SkillSelector
-                    activities={activities}
-                    filter={filter}
-                    setFilter={setFilter}
-                  ></SkillSelector>
-                </ErrorBoundary>
+                {ident && (
+                  <ErrorBoundary>
+                    <ActivityFilter filter={filter} setFilter={setFilter} />
+                  </ErrorBoundary>
+                )}
               </Grid>
             </Grid>
             <Grid item xs={10} container justify="center" alignItems="center">
@@ -136,7 +109,7 @@ function App() {
               </Grid>
             </Grid>
             <Grid item xs={1} container justify="center" alignItems="center">
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <p style={{ border: "1px solid black" }}>TODO nav timeline</p>
               </Grid>
             </Grid>

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { useState, useContext, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,19 +7,19 @@ import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
 import { ReactComponent as FilterIcon } from "./filter.svg";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import { IdentContext } from "./App";
 
 import PropTypes from "prop-types";
 
 import CrossOverIcon from "./crossOverIcon.svg";
 
 const useStyles = makeStyles((theme) => ({
-  skillselector: {
+  activityFilter: {
     position: "relative",
     border: "1px solid black",
     flexGrow: "0" /* do not grow   - initial value: 0 */,
     flexShrink: "0" /* do not shrink - initial value: 1 */,
     minWidth: "60px",
-    minHeight: "400px",
   },
   activitySelected: {
     filter: "none",
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     filter: "grayscale(100%)",
     margin: "auto",
-    "&::after": {
+    "&::before": {
       content: "''",
       position: "absolute",
       width: "100%",
@@ -43,39 +43,74 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SkillSelector(props) {
-  console.log(props);
-
+export default function ActivityFilter(props) {
   const classes = useStyles();
-  //const ident = useContext(IdentContext); //TODO Use for add or remove
+  const { ident } = useContext(IdentContext);
+  const [activities, setActivities] = useState([]);
+  const { filter, setFilter } = props;
+  useEffect(() => {
+    if (ident === null) {
+      setActivities(null);
+    } else {
+      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
+        credentials: "include",
+      })
+        .then((response) => {
+          console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
+          if (!response.ok) {
+            setActivities(null);
+            console.warn(
+              `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
+                response.status
+            );
+          }
+          return response.json();
+        })
+        .then(
+          (response) => {
+            console.log("** OK ** SET ACTIVITIES AND FILTERS ** ");
+            setFilter(response.results.map((activity) => activity.id));
+            setActivities(response.results);
+          },
+          (error) => {
+            setActivities(null);
+            console.warn(
+              "Error during activities initialization fetch :",
+              error
+            );
+          }
+        );
+    }
+  }, [ident, setFilter]);
 
   const handleToggle = (activityId) => () => {
-    const currentIndex = props.filter.indexOf(activityId);
-    const newFilter = [...props.filter];
+    const currentIndex = filter.indexOf(activityId);
+    const newFilter = [...filter];
 
     if (currentIndex === -1) {
       newFilter.push(activityId);
     } else {
       newFilter.splice(currentIndex, 1);
     }
-    props.setFilter(newFilter);
+    setFilter(newFilter);
   };
 
   return (
     <Fragment>
-      <List className={classes.skillselector}>
-        <Tooltip
-          title="Filtrer par activité" //TODO Add i18n
-          placement="right"
-          TransitionProps={{ timeout: 600 }}
-        >
-          <SvgIcon style={{ padding: "0", margin: "0" }}>
-            <FilterIcon />
-          </SvgIcon>
-        </Tooltip>
-
-        {props.activities &&
-          props.activities.map((activity) => {
+      <List className={classes.activityFilter}>
+        <ListItem key="filter_icon_key">
+          <Tooltip
+            title="Filtrer par activité" //TODO Add i18n
+            placement="right"
+            TransitionProps={{ timeout: 600 }}
+          >
+            <SvgIcon style={{ padding: "0", margin: "0" }}>
+              <FilterIcon />
+            </SvgIcon>
+          </Tooltip>
+        </ListItem>
+        {activities &&
+          activities.map((activity) => {
             return (
               <ListItem
                 key={activity.id}
@@ -95,7 +130,7 @@ export default function SkillSelector(props) {
                       src={`${process.env.PUBLIC_URL}/images/skills/python.png`}
                       // src={`${process.env.PUBLIC_URL}/images/skills/${activity.name}.png`} //TODO readd it
                       className={
-                        props.filter && props.filter.includes(activity.id)
+                        filter && filter.includes(activity.id)
                           ? classes.activitySelected
                           : classes.activityNotSelected
                       }
@@ -110,8 +145,7 @@ export default function SkillSelector(props) {
   );
 }
 
-SkillSelector.propTypes = {
-  activities: PropTypes.arrayOf(PropTypes.number).isRequired,
+ActivityFilter.propTypes = {
   filter: PropTypes.arrayOf(PropTypes.number).isRequired,
   setFilter: PropTypes.func.isRequired,
 };
