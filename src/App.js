@@ -111,7 +111,13 @@ function App() {
           >
             <Grid item xs={1} container justify="center" alignItems="center">
               <Grid item xs={12}>
-                <p style={{ border: "1px solid black" }}>TODO Filtres</p>
+                <ErrorBoundary>
+                  <SkillSelector
+                    activities={activities}
+                    filter={filter}
+                    setFilter={setFilter}
+                  ></SkillSelector>
+                </ErrorBoundary>
               </Grid>
             </Grid>
             <Grid item xs={10} container justify="center" alignItems="center">
@@ -119,7 +125,6 @@ function App() {
                 <ErrorBoundary>
                   <div
                     style={{
-                      backgroundColor: "green",
                       maxHeight: "85vh",
                       //TODO Find something else than 85vh
                       overflow: "auto",
@@ -157,11 +162,3 @@ function App() {
 }
 
 export default App;
-/* <ErrorBoundary>
-                    <SkillSelector
-                      activities={activities}
-                      filter={filter}
-                      setFilter={setFilter}
-                    ></SkillSelector>
-                    <p>{ident ? "Identified" : "No ident"}</p>
-                  </ErrorBoundary> */
