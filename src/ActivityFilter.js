@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, Fragment } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -8,6 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { ReactComponent as FilterIcon } from "./filter.svg";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { IdentContext } from "./App";
+import Box from "@material-ui/core/Box";
 
 import PropTypes from "prop-types";
 
@@ -96,26 +97,26 @@ export default function ActivityFilter(props) {
   };
 
   return (
-    <Fragment>
-      <List className={classes.activityFilter}>
-        <Tooltip
-          title="Filtrer par activité" //TODO Add i18n
-          placement="right"
-          TransitionProps={{ timeout: 600 }}
-        >
-          <SvgIcon
-            style={{
-              padding: "0",
-              margin: "2",
-              position: "relative",
-              bottom: "-16px",
-            }}
+    <Box>
+      {activities && activities.length > 0 && (
+        <List className={classes.activityFilter}>
+          <Tooltip
+            title="Filtrer par activité" //TODO Add i18n
+            placement="right"
+            TransitionProps={{ timeout: 600 }}
           >
-            <FilterIcon />
-          </SvgIcon>
-        </Tooltip>
-        {activities &&
-          activities.map((activity) => {
+            <SvgIcon
+              style={{
+                padding: "0",
+                margin: "2",
+                position: "relative",
+                bottom: "-16px",
+              }}
+            >
+              <FilterIcon />
+            </SvgIcon>
+          </Tooltip>
+          {activities.map((activity) => {
             return (
               <ListItem
                 key={activity.id}
@@ -145,8 +146,9 @@ export default function ActivityFilter(props) {
               </ListItem>
             );
           })}
-      </List>
-    </Fragment>
+        </List>
+      )}
+    </Box>
   );
 }
 
