@@ -2,11 +2,12 @@ import React, { useContext, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
-import { IdentContext } from "./App";
+import Box from "@material-ui/core/Box";
 
+import { IdentContext } from "./App";
 import LogoutDialog from "./LogoutDialog.js";
 
-export default function UserIdent(props) {
+export default function UserIdent() {
   const [logoutDialogOpened, setLogoutDialogOpened] = useState(false);
   const { ident, setIdent } = useContext(IdentContext);
 
@@ -16,10 +17,12 @@ export default function UserIdent(props) {
     userIdentRender = (
       <>
         <Tooltip
-          title=<div>
-            <div>{ident.profileObj.name}</div>
-            <div>{ident.profileObj.email}</div>
-          </div>
+          title={
+            <Box>
+              <Box>{ident.profileObj.name}</Box>
+              <Box>{ident.profileObj.email}</Box>
+            </Box>
+          }
         >
           <Avatar
             alt={ident.profileObj.name}

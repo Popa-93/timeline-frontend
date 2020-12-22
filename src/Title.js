@@ -3,6 +3,8 @@ import Input from "@material-ui/core/Input";
 import { debounce } from "lodash";
 import { IdentContext } from "./App.js";
 
+import PropTypes from "prop-types";
+
 export default function Title(props) {
   const [title, setTitle] = useState("");
   const { ident } = useContext(IdentContext);
@@ -162,3 +164,8 @@ export default function Title(props) {
   }
   //TODO i18n
 }
+
+Title.propTypes = {
+  timelineID: PropTypes.number,
+  setTimelineID: PropTypes.func.isRequired,
+};

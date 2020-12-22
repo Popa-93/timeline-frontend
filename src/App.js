@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -7,7 +7,7 @@ import {
 
 import "./App.css";
 
-import { Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import ErrorBoundary from "./ErrorBoundary";
 import Title from "./Title";
 import UserIdent from "./UserIdent";
@@ -23,7 +23,7 @@ function App() {
   const [ident, setIdent] = useState(null);
   const [filter, setFilter] = useState([]);
   const [timelineID, setTimelineID] = useState(null);
-
+  const addRecordButtonContainerRef = useRef(null);
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
 
@@ -79,6 +79,7 @@ function App() {
           >
             <Grid item xs={1} container justify="center" alignItems="center">
               <Grid item xs={12}>
+                {ident && <Box ref={addRecordButtonContainerRef}></Box>}
                 {ident && (
                   <ErrorBoundary>
                     <ActivityFilter filter={filter} setFilter={setFilter} />
@@ -96,7 +97,10 @@ function App() {
                       overflow: "auto",
                     }}
                   >
-                    <ActivitiesFollowup filter={filter} />
+                    <ActivitiesFollowup
+                      filter={filter}
+                      addRecordButtonContainerRef={addRecordButtonContainerRef}
+                    />
                   </div>
                 </ErrorBoundary>
               </Grid>

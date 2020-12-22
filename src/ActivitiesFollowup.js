@@ -11,10 +11,12 @@ import TimelineDot from "@material-ui/lab/TimelineDot";
 import FastfoodIcon from "@material-ui/icons/Fastfood"; //TODO replace
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import Portal from "@material-ui/core/Portal";
 
 import PropTypes from "prop-types";
 
 import { IdentContext } from "./App";
+import AddRecordButton from "./AddRecordButton";
 import PrettyDateDisplay from "./PrettyDateDisplay";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,13 +33,13 @@ function ActivitiesFollowup(props) {
   const classes = useStyles();
   const { ident } = useContext(IdentContext);
   const [records, setRecords] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); //TODO add loading spinner
+  //const [isLoading, setIsLoading] = useState(false); //TODO add loading spinner
 
   //TODO Create a custom hook to handle fetch
   // -> https://www.robinwieruch.de/react-hooks-fetch-data
 
   useEffect(() => {
-    setIsLoading(true);
+    //TODO setIsLoading(true);
     if (!ident) {
       setRecords(null);
     } else {
@@ -48,7 +50,7 @@ function ActivitiesFollowup(props) {
         .then(
           (res) => {
             setRecords(res.results);
-            setIsLoading(false);
+            //TODO setIsLoading(false);
           },
           (error) => {
             setRecords(null);
@@ -60,13 +62,27 @@ function ActivitiesFollowup(props) {
           }
         );
     }
-    setIsLoading(false);
+    //TODO setIsLoading(false);
   }, [ident]);
+  const addRecord = () => {
+    console.log("Add record");
+  };
 
   return (
     <Fragment>
-      {isLoading ? <p>Loading</p> : <p>Not loading</p>}
-      <Timeline align="alternate">
+      {/* {isLoading ? <p>Loading</p> : <p>Not loading</p>} */}
+      {/* //TODO Manage loading icon EVEYWHERE  */}
+
+      {/* No out DOM hierarchy render here but I want to practice Portal */}
+      {props.addRecordButtonContainerRef && (
+        <Portal container={props.addRecordButtonContainerRef.current}>
+          <AddRecordButton onClick={addRecord} />
+        </Portal>
+      )}
+      <Timeline
+        align="alternate"
+        style={{ backgroundColor: "green" }} //TODO Remove
+      >
         {records &&
           records
             .filter((record) => props.filter.includes(record.activity))
@@ -104,6 +120,7 @@ function ActivitiesFollowup(props) {
 
 ActivitiesFollowup.propTypes = {
   filter: PropTypes.arrayOf(PropTypes.number).isRequired,
+  addRecordButtonContainerRef: PropTypes.func,
 };
 
 export default ActivitiesFollowup;
