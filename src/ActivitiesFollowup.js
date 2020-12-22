@@ -71,7 +71,7 @@ function ActivitiesFollowup(props) {
           records
             .filter((record) => props.filter.includes(record.activity))
             .map((record) => (
-              <TimelineItem>
+              <TimelineItem key={record.id}>
                 <TimelineOppositeContent>
                   <PrettyDateDisplay date={record.date} />
                   {/* //TODO Sprite date */}

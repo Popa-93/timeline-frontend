@@ -22,6 +22,7 @@ export const IdentContext = React.createContext({
 function App() {
   const [ident, setIdent] = useState(null);
   const [filter, setFilter] = useState([]);
+  const [timelineID, setTimelineID] = useState(null);
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
@@ -57,10 +58,10 @@ function App() {
               item
               xs={8}
               container
-              alignItems="flex-center"
+              alignItems="center"
               style={{ height: "40px" }}
             >
-              <Title />
+              <Title timelineID={timelineID} setTimelineID={setTimelineID} />
             </Grid>
             <Grid item xs={1} style={{ height: "40px" }} />
             <Grid item xs={1}>
