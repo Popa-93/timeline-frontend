@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -7,12 +7,12 @@ import {
 
 import "./App.css";
 
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import ErrorBoundary from "./ErrorBoundary";
 import Title from "./Title";
 import UserIdent from "./UserIdent";
 import ActivityFilter from "./ActivityFilter";
-import ActivitiesFollowup from "./ActivitiesFollowup";
+import RecordList from "./RecordList";
 
 export const IdentContext = React.createContext({
   ident: null,
@@ -23,9 +23,18 @@ function App() {
   const [ident, setIdent] = useState(null);
   const [filter, setFilter] = useState([]);
   const [timelineID, setTimelineID] = useState(null);
-  const addRecordButtonContainerRef = useRef(null);
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
+
+  useEffect(() => {
+    const doSomethingBeforeUnload = () => {
+      console.log("Closing");
+    };
+    window.addEventListener("beforeunload", (ev) => {
+      ev.preventDefault();
+      return doSomethingBeforeUnload();
+    });
+  }, []);
 
   return (
     <IdentContext.Provider
@@ -79,7 +88,6 @@ function App() {
           >
             <Grid item xs={1} container justify="center" alignItems="center">
               <Grid item xs={12}>
-                {ident && <Box ref={addRecordButtonContainerRef}></Box>}
                 {ident && (
                   <ErrorBoundary>
                     <ActivityFilter filter={filter} setFilter={setFilter} />
@@ -97,10 +105,7 @@ function App() {
                       overflow: "auto",
                     }}
                   >
-                    <ActivitiesFollowup
-                      filter={filter}
-                      addRecordButtonContainerRef={addRecordButtonContainerRef}
-                    />
+                    <RecordList filter={filter} />
                   </div>
                 </ErrorBoundary>
               </Grid>

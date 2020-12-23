@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import Input from "@material-ui/core/Input";
+import TextField from "@material-ui/core/TextField";
 import { debounce } from "lodash";
 import { IdentContext } from "./App.js";
 
@@ -153,7 +153,7 @@ export default function Title(props) {
     return null;
   } else {
     return (
-      <Input
+      <TextField
         fullWidth
         value={title}
         onChange={changeTitle}
