@@ -83,7 +83,7 @@ export default function RecordContent(props) {
 
 RecordContent.propTypes = {
   timelineID: PropTypes.number.isRequired,
-  recordId: PropTypes.number.isRequired,
+  recordID: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };

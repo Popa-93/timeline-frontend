@@ -9,14 +9,13 @@ import FastfoodIcon from "@material-ui/icons/Fastfood"; //TODO replace
 
 import PropTypes from "prop-types";
 
-import PrettyDateDisplay from "./PrettyDateDisplay";
 import RecordContent from "./RecordContent";
 
 export default function RecordItem(props) {
   return (
     <TimelineItem>
       <TimelineOppositeContent>
-        <PrettyDateDisplay date={props.date} />
+        {/* < date={props.date} /> */}
         {/* //TODO Sprite date */}
       </TimelineOppositeContent>
       <TimelineSeparator>
@@ -30,7 +29,7 @@ export default function RecordItem(props) {
       <TimelineContent>
         <RecordContent
           timelineID={props.timelineID}
-          recordID={props.id}
+          recordID={props.recordID}
           title={props.title}
           description={props.description}
         />
@@ -42,7 +41,7 @@ export default function RecordItem(props) {
 RecordItem.propTypes = {
   timelineID: PropTypes.number.isRequired,
   recordID: PropTypes.number.isRequired,
-  date: PropTypes.string.isRequired, //TODO Change type to JS Date
+  date: PropTypes.instanceOf(Date),
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };
