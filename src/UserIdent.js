@@ -94,7 +94,10 @@ export default function UserIdent() {
               }
             );
         }}
-        onFailure={() => setIdent(null)}
+        onFailure={() => {
+          setIdent(null);
+          console.log("Google login Failure");
+        }}
         cookiePolicy={"single_host_origin"}
       ></GoogleLogin>
     );

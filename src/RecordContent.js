@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -20,27 +20,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RecordContent(props) {
   const classes = useStyles();
-  const [title, setTitle] = useState(props.title);
-  const [description, setDescription] = useState(props.description);
-
   const editable = true; //TODO Manage public/private view
 
   function changeTitle(e) {
-    setTitle(e.target.value);
-    // postRecordContentToBackend.current(
-    //   props.timelineID,
-    //   props.recordID,
-    //   e.target.value,
-    //   description
-    // );
+    props.setTitle(e.target.value);
+    props.updateContent(e.target.value, props.description);
   }
 
   function changeDescription(e) {
-    setDescription(e.target.value);
+    props.setDescription(e.target.value);
+    props.updateContent(props.title, e.target.value);
   }
   if (editable) {
     //TODO Changer icone on Hover
-    //TODO Add pop edition mode
     return (
       <Paper
         elevation={3}
@@ -51,13 +43,13 @@ export default function RecordContent(props) {
           fullWidth
           disableUnderline
           //readOnly To switch mode TODO
-          value={title}
+          value={props.title}
           onChange={changeTitle}
           placeholder="Titre"
         />
         <Input
           fullWidth
-          value={description}
+          value={props.description}
           onChange={changeDescription}
           placeholder="Description"
           multiline
@@ -85,5 +77,7 @@ RecordContent.propTypes = {
   timelineID: PropTypes.number.isRequired,
   recordID: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  setTitle: PropTypes.func.isRequired,
   description: PropTypes.string.isRequired,
+  setDescription: PropTypes.func.isRequired,
 };

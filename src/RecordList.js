@@ -27,7 +27,6 @@ function RecordList(props) {
         .then((res) => res.json())
         .then(
           (res) => {
-            console.log("****************FSA ***", res.results);
             setRecords(res.results);
             //TODO setIsLoading(false);
           },
@@ -55,19 +54,16 @@ function RecordList(props) {
       {records &&
         records
           .filter((record) => props.filter.includes(record.activity))
-          .map(
-            (record) =>
-              console.warn("REcord =", record) || (
-                <RecordItem
-                  key={record.id}
-                  timelineID={record.timelineID}
-                  recordID={record.id}
-                  date={record.date}
-                  title={record.title}
-                  description={record.description}
-                />
-              )
-          )}
+          .map((record) => (
+            <RecordItem
+              key={record.id}
+              timelineID={record.timelineID}
+              recordID={record.id}
+              date={new Date(record.date)}
+              title={record.title}
+              description={record.description}
+            />
+          ))}
     </Timeline>
   );
 }
