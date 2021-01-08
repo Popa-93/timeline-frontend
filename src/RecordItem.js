@@ -6,11 +6,11 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import FastfoodIcon from "@material-ui/icons/Fastfood"; //TODO replace
 import PropTypes from "prop-types";
 
 import RecordContent from "./RecordContent";
 import RecordDate from "./RecordDate";
+import RecordActivity from "./RecordActivity";
 
 import { debounce } from "lodash";
 
@@ -18,7 +18,7 @@ export default function RecordItem(props) {
   const [date, setDate] = useState(props.date);
   const [title, setTitle] = useState(props.title);
   const [description, setDescription] = useState(props.description);
-  const [activity, setActivity] = useState(props.activity);
+  const [activityID, setActivityID] = useState(props.activityID);
 
   //Debounce API call after onChange
   const postRecordToBackend = useRef(null);
@@ -90,12 +90,11 @@ export default function RecordItem(props) {
       date,
       titleToSet,
       descriptionToSet,
-      activity
+      activityID
     );
   };
 
   const updateDate = (dateToSet) => {
-    console.log("dateToSet =", dateToSet);
     setDate(dateToSet);
     postRecordToBackend.current(
       props.timelineID,
@@ -103,7 +102,19 @@ export default function RecordItem(props) {
       dateToSet,
       title,
       description,
-      activity
+      activityID
+    );
+  };
+
+  const updateActivityID = (activityIDToSet) => {
+    setActivityID(activityIDToSet);
+    postRecordToBackend.current(
+      props.timelineID,
+      props.recordID,
+      date,
+      title,
+      description,
+      activityIDToSet
     );
   };
 
@@ -112,17 +123,22 @@ export default function RecordItem(props) {
   //   setTitle(e.target.value);
   //   postTitleToBackend.current(timelineID, e.target.value);
   // }
+  const [activitySectionRef, setActivitySectionRef] = useState(null);
   return (
     <TimelineItem>
       <TimelineOppositeContent>
-        <RecordDate date={date} updateDate={updateDate}></RecordDate>
+        <RecordDate date={date} updateDate={updateDate} />
       </TimelineOppositeContent>
       <TimelineSeparator>
-        <TimelineDot>
-          {/* variant="outlined" TODO decide*/}
-          <FastfoodIcon />
-          {/* <Typography>{record.activity}</Typography> */}
-        </TimelineDot>
+        <div>
+          <TimelineDot ref={setActivitySectionRef}>
+            <RecordActivity
+              activityID={activityID}
+              updateActivityID={updateActivityID}
+              activitySectionRef={activitySectionRef}
+            />
+          </TimelineDot>
+        </div>
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
@@ -146,4 +162,5 @@ RecordItem.propTypes = {
   date: PropTypes.instanceOf(Date),
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  activityID: PropTypes.number.isRequired,
 };

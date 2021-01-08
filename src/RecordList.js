@@ -53,7 +53,7 @@ function RecordList(props) {
     >
       {records &&
         records
-          .filter((record) => props.filter.includes(record.activity))
+          .filter((record) => props.filter.includes(record.activityID))
           .map((record) => (
             <RecordItem
               key={record.id}
@@ -62,6 +62,7 @@ function RecordList(props) {
               date={new Date(record.date)}
               title={record.title}
               description={record.description}
+              activityID={record.ActivityID}
             />
           ))}
     </Timeline>

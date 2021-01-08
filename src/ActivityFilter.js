@@ -22,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: "0" /* do not shrink - initial value: 1 */,
     minWidth: "60px",
   },
+  activity: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
   activitySelected: {
     filter: "none",
     margin: "auto",
@@ -131,15 +136,14 @@ export default function ActivityFilter(props) {
                     enterDelay={500}
                   >
                     <Avatar
-                      variant="rounded"
+                      variant="square"
                       alt={activity.name}
                       src={`${process.env.PUBLIC_URL}/images/skills/python.png`}
-                      // src={`${process.env.PUBLIC_URL}/images/skills/${activity.name}.png`} //TODO readd it
-                      className={
+                      className={`${classes.activity} ${
                         filter && filter.includes(activity.id)
                           ? classes.activitySelected
                           : classes.activityNotSelected
-                      }
+                      }`}
                     ></Avatar>
                   </Tooltip>
                 </ListItemAvatar>

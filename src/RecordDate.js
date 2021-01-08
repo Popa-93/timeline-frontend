@@ -3,16 +3,18 @@ import { fr, enUS } from "date-fns/locale";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import PropTypes from "prop-types";
+
 registerLocale("fr", fr);
 registerLocale("enUS", enUS);
 
 export default function RecordDate(props) {
   //TODO Style DateInput button
-  const DateInput = ({ value, onClick }) => (
-    <button className="date-input" onClick={onClick}>
-      {value}
-    </button>
-  );
+  // const DateInput = ({ value, onClick }) => (
+  //   <button className="date-input" onClick={onClick}>
+  //     {value}
+  //   </button>
+  // );
 
   return (
     <DatePicker
@@ -25,3 +27,8 @@ export default function RecordDate(props) {
     />
   );
 }
+
+RecordDate.propTypes = {
+  date: PropTypes.instanceOf(Date).isRequired,
+  updateDate: PropTypes.func.isRequired,
+};
