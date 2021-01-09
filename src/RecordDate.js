@@ -1,3 +1,4 @@
+import Paper from "@material-ui/core/Paper";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { fr, enUS } from "date-fns/locale";
 
@@ -17,14 +18,16 @@ export default function RecordDate(props) {
   // );
 
   return (
-    <DatePicker
-      selected={props.date}
-      onChange={props.updateDate}
-      onMonthChange={props.updateDate}
-      locale="fr" //TODO Localize date
-      dateFormat="dd MMMM yyyy"
-      //customInput={<DateInput />}
-    />
+    <Paper variant="outlined" style={{ display: "inline-block" }}>
+      <DatePicker
+        selected={props.date}
+        onChange={props.updateDate}
+        onMonthChange={props.updateDate}
+        locale="fr" //TODO Localize date
+        dateFormat="dd MMMM yyyy"
+        //customInput={<DateInput />}
+      />
+    </Paper>
   );
 }
 

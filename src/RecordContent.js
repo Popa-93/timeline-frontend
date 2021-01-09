@@ -34,7 +34,7 @@ export default function RecordContent(props) {
   if (editable) {
     //TODO Changer icone on Hover
     return (
-      <Paper elevation={3} className={classes.itemcontent}>
+      <Paper variant="outlined" className={classes.itemcontent}>
         <Input
           className={classes.titleInput}
           fullWidth
@@ -58,7 +58,7 @@ export default function RecordContent(props) {
   } else {
     return (
       <Paper
-        elevation={3}
+        variant="outlined"
         className={`${classes.paper} ${classes.itemcontent}`}
       >
         <Typography variant="h6" component="h1">

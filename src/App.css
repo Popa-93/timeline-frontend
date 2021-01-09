@@ -12,3 +12,7 @@
 .user-ident {
   align-self: flex-end;
 }
+
+input {
+  border: 0;
+}

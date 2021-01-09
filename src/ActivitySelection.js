@@ -10,6 +10,8 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 
+import ActivityEditor from "./ActivityEditor";
+
 import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
+  const [editorOpened, setEditorOpened] = useState(false);
+  const [addActivityIconRef, setAddActivityIconRef] = useState(null);
   const classes = useStyles();
 
   return (
@@ -62,13 +66,13 @@ export default function ActivitySelection(props) {
         placement={"right-start"}
         //disablePortal={false}
         modifiers={{
-          flip: {
-            enabled: true,
-          },
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: "scrollParent",
-          },
+          // flip: {
+          //   enabled: true,
+          // },
+          // preventOverflow: {
+          //   enabled: true,
+          //   boundariesElement: "scrollParent",
+          // },
           arrow: {
             enabled: true,
             element: arrowRef,
@@ -80,7 +84,7 @@ export default function ActivitySelection(props) {
         }}
       >
         <span className={classes.arrow} ref={setArrowRef} />
-        <Paper elevation={3}>
+        <Paper variant="outlined">
           <List>
             {/* {emails.map((email) => (
           <ListItem button onClick={() => handleListItemClick(email)} key={email}>
@@ -93,10 +97,15 @@ export default function ActivitySelection(props) {
           </ListItem>
         ))} */}
 
-            <ListItem autoFocus button onClick={() => {}}>
+            <ListItem autoFocus button onClick={() => setEditorOpened(true)}>
+              <ActivityEditor
+                anchorEl={addActivityIconRef}
+                open={editorOpened}
+                onClose={() => setEditorOpened(false)}
+              />
               <ListItemAvatar>
                 <Avatar>
-                  <AddIcon />
+                  <AddIcon ref={setAddActivityIconRef} />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Add category" />
