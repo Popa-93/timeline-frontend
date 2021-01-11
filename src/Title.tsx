@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import { debounce } from "lodash";
-import { IdentContext } from "./App.js";
+import { IdentContext } from "./App";
 
 import PropTypes from "prop-types";
 

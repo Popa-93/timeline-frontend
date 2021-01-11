@@ -4,13 +4,14 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 import Avatar from "@material-ui/core/Avatar";
+import Input from "@material-ui/core/Input";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 
-import ActivityEditor from "./ActivityEditor";
+import ActivityAvatarEditor from "./ActivityAvatarEditor";
 
 import PropTypes from "prop-types";
 
@@ -49,6 +50,8 @@ export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
   const [addActivityIconRef, setAddActivityIconRef] = useState(null);
+  const [newAvatar, setNewAvatar] = useState(null);
+  const [newAvatarName, setNewAvatarName] = useState("");
   const classes = useStyles();
 
   return (
@@ -86,21 +89,33 @@ export default function ActivitySelection(props) {
         <span className={classes.arrow} ref={setArrowRef} />
         <Paper variant="outlined">
           <List>
-            {/* {emails.map((email) => (
-          <ListItem button onClick={() => handleListItemClick(email)} key={email}>
-            <ListItemAvatar>
-              <Avatar className={classes.avatar}>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={email} />
-          </ListItem>
-        ))} */}
-
+            <ListItem button onClick={() => console.log("Set cat")}>
+              <ListItemAvatar>
+                <Avatar src={newAvatar}></Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log("Edit cat name");
+                }}
+              >
+                <Input
+                  fullWidth
+                  disableUnderline
+                  //readOnly To switch mode TODO
+                  value={newAvatarName}
+                  onChange={(e) => setNewAvatarName(e.target.value)}
+                  placeholder="Titre"
+                />
+                {/* TODO Limit input size On all Inputs */}
+              </ListItemText>
+            </ListItem>
             <ListItem autoFocus button onClick={() => setEditorOpened(true)}>
-              <ActivityEditor
+              <ActivityAvatarEditor
                 anchorEl={addActivityIconRef}
                 open={editorOpened}
+                setNewAvatar={setNewAvatar}
                 onClose={() => setEditorOpened(false)}
               />
               <ListItemAvatar>

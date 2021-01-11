@@ -16,7 +16,7 @@ import RecordList from "./RecordList";
 
 export const IdentContext = React.createContext({
   ident: null,
-  setIdent: () => {},
+  setIdent: function(newIdent: object) : void {}, //TODO precise the object type
 });
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
         setIdent: setIdent,
       }}
     >
+      <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <Grid
           style={{ height: "100vh", minWidth: "100%", border: "1px solid red" }}
@@ -74,9 +75,9 @@ function App() {
             </Grid>
             <Grid item xs={1} style={{ height: "40px" }} />
             <Grid item xs={1}>
-              <ErrorBoundary>
+              
                 <UserIdent />
-              </ErrorBoundary>
+              
             </Grid>
           </Grid>
           {/* Main Grid */}
@@ -89,15 +90,15 @@ function App() {
             <Grid item xs={1} container justify="center" alignItems="center">
               <Grid item xs={12}>
                 {ident && (
-                  <ErrorBoundary>
+                  
                     <ActivityFilter filter={filter} setFilter={setFilter} />
-                  </ErrorBoundary>
+                  
                 )}
               </Grid>
             </Grid>
             <Grid item xs={10} container justify="center" alignItems="center">
               <Grid item xs={12}>
-                <ErrorBoundary>
+                
                   <div
                     style={{
                       maxHeight: "85vh",
@@ -107,7 +108,7 @@ function App() {
                   >
                     <RecordList filter={filter} />
                   </div>
-                </ErrorBoundary>
+
               </Grid>
             </Grid>
             <Grid item xs={1} container justify="center" alignItems="center">
@@ -132,6 +133,7 @@ function App() {
           </Grid>
         </Grid>
       </ThemeProvider>
+      </ErrorBoundary>
     </IdentContext.Provider>
   );
 }

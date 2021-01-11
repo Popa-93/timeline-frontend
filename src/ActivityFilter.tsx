@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme) => ({
   activityFilter: {
     position: "relative",
     //border: "1px solid black",
-    flexGrow: "0" /* do not grow   - initial value: 0 */,
-    flexShrink: "0" /* do not shrink - initial value: 1 */,
+    flexGrow: 0 /* do not grow   - initial value: 0 */,
+    flexShrink: 0 /* do not shrink - initial value: 1 */,
     minWidth: "60px",
   },
   activity: {

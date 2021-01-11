@@ -33,8 +33,7 @@ function RecordList(props) {
           (error) => {
             setRecords(null);
             throw new Error(
-              "Error during records initialization fetch :",
-              error
+              `Error during records initialization fetch : ${error}`
             );
             // TODO Display image in place of component using missing datas
           }

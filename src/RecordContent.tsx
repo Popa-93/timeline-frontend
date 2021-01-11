@@ -59,7 +59,7 @@ export default function RecordContent(props) {
     return (
       <Paper
         variant="outlined"
-        className={`${classes.paper} ${classes.itemcontent}`}
+        className={classes.itemcontent}
       >
         <Typography variant="h6" component="h1">
           {props.title}
@@ -77,4 +77,5 @@ RecordContent.propTypes = {
   setTitle: PropTypes.func.isRequired,
   description: PropTypes.string.isRequired,
   setDescription: PropTypes.func.isRequired,
+  updateContent: PropTypes.func.isRequired,
 };

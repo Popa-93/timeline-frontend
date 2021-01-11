@@ -24,7 +24,8 @@ export default function RecordActivity(props) {
         open={activitySelectionOpened}
         onClose={() => setActivitySelectionOpened(false)}
         activityIconRef={activityIconRef.current}
-        activitySectionRef={props.activitySectionRef}
+        //activitySectionRef={props.activitySectionRef}
+        //TODO REmove once decided
       />
       <IconButton
         className={classes.icon}

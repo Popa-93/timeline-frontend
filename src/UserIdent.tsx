@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin, GoogleLoginResponse } from "react-google-login";
 import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
 
 import { IdentContext } from "./App";
-import LogoutDialog from "./LogoutDialog.js";
+import LogoutDialog from "./LogoutDialog";
 
 export default function UserIdent() {
   const [logoutDialogOpened, setLogoutDialogOpened] = useState(false);
@@ -35,7 +35,6 @@ export default function UserIdent() {
           open={logoutDialogOpened}
           onClose={() => setLogoutDialogOpened(false)}
           onLogout={() => setIdent(null)}
-          googleUser={ident.profileObj}
         />
       </>
     );
@@ -44,11 +43,12 @@ export default function UserIdent() {
       <GoogleLogin
         clientId={process.env.REACT_APP_GOOGLE_APP_CLIENTID}
         buttonText="Login"
-        onSuccess={(receivedObj) => {
-          console.log("GoogleLogin : googleObj ", receivedObj); //TODO remove
-          /*Auth on backend*/
+        
+        accessType ="online"
+        responseType = "token"
+        onSuccess={(receivedObj : GoogleLoginResponse) => {
+          console.log("GoogleLogin : googleObj :", receivedObj);
           // TODO Move this in context management on setIdent?
-
           fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/auth/google/`, {
             method: "POST",
             credentials: "include",
@@ -57,7 +57,7 @@ export default function UserIdent() {
               "content-type": "application/json",
             },
             body: JSON.stringify({
-              access_token: receivedObj.accessToken,
+              access_token: receivedObj.accessToken
             }),
           })
             .then((response) => {
