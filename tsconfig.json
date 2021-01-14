@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
+      "ES6",
       "dom",
       "dom.iterable",
       "esnext"
@@ -25,4 +26,11 @@
   ]
 }
 
+// Material UI recommanded options for typescript
+// "compilerOptions": {
+//   "lib": ["es6", "dom"],
+//   "noImplicitAny": true,
+//   "noImplicitThis": true,
+//   "strictNullChecks": true
+// }
 //strictNullChecks = true

@@ -16,7 +16,7 @@ import RecordList from "./RecordList";
 
 export const IdentContext = React.createContext({
   ident: null,
-  setIdent: function(newIdent: object) : void {}, //TODO precise the object type
+  setIdent: function(newIdent: object) {}, //TODO precise the object type
 });
 
 function App() {

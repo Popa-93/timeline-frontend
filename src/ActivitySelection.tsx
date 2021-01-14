@@ -18,6 +18,7 @@ import PropTypes from "prop-types";
 const useStyles = makeStyles((theme) => ({
   popper: {
     zIndex: 1,
+    display:"inline-block",
 
     '&[x-placement*="right"] $arrow': {
       left: 0,
@@ -64,8 +65,7 @@ export default function ActivitySelection(props) {
         className={classes.popper}
         //aria-labelledby="simple-dialog-title"
         open={props.open}
-        //anchorEl={props.activityIconRef}
-        anchorEl={props.activitySectionRef}
+        anchorEl={props.activityIconRef}
         placement={"right-start"}
         //disablePortal={false}
         modifiers={{
@@ -129,8 +129,8 @@ export default function ActivitySelection(props) {
           </List>
         </Paper>
       </Popper>
-    </ClickAwayListener>
-  );
+    </ClickAwayListener>);
+  
 }
 
 ActivitySelection.propTypes = {

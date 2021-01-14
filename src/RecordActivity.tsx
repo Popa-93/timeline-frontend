@@ -1,11 +1,16 @@
-import { useState, useRef } from "react";
+// @ts-nocheck
+//TODO Understand and fix this damn crao
+
+import { useState } from "react";
 
 import PropTypes from "prop-types";
-
+import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import ActivitySelection from "./ActivitySelection";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import { makeStyles } from "@material-ui/core/styles";
+
+
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -16,14 +21,15 @@ const useStyles = makeStyles((theme) => ({
 export default function RecordActivity(props) {
   const classes = useStyles();
   const [activitySelectionOpened, setActivitySelectionOpened] = useState(false);
-  const activityIconRef = useRef();
+  const [activityIconRef, setActivityIconRef] = useState();
 
   return (
-    <div ref={activityIconRef}>
-      <ActivitySelection
+    <Box
+    ref={setActivityIconRef}> 
+       <ActivitySelection
         open={activitySelectionOpened}
         onClose={() => setActivitySelectionOpened(false)}
-        activityIconRef={activityIconRef.current}
+        activityIconRef={activityIconRef}
         //activitySectionRef={props.activitySectionRef}
         //TODO REmove once decided
       />
@@ -34,7 +40,7 @@ export default function RecordActivity(props) {
       >
         <HelpOutlineIcon fontSize="large" />
       </IconButton>
-    </div>
+    </Box>
   );
 }
 

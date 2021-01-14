@@ -5,33 +5,35 @@ import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
 import AvatarEdit from "react-avatar-edit";
-
+import { styled, useTheme } from "@material-ui/core/styles";
+import { spacing } from "@material-ui/system";
 import PropTypes from "prop-types";
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+
+const StyledPaper= styled(Paper)(spacing);
 
 const useStyles = makeStyles((theme) => ({
-  popper: {
-    zIndex: 99, //Ignored
-    backgroundColor: "red",
-    width: "800px",
+  validateButton: {
+    color: "white",
+    minWidth: 20,
+    width: 20,
+    minHeight: 20,
+    height: 20,
+    position: 'absolute',
+    zIndex: 999,
+    cursor: 'pointer',
+    right: theme.spacing(1) + 10,
+    top: theme.spacing(1) + 10,
+    backgroundColor: "transparent",
+    border: "none"
+  }
 
-    '&[x-placement*="right"] $arrow': {
-      left: 0,
-      marginLeft: "-0.9em",
-      height: "3em",
-      width: "1em",
-      "&::before": {
-        borderWidth: "1em 1em 1em 0",
-        borderColor: `transparent ${theme.palette.background.paper} transparent transparent`,
-      },
-    },
-  },
 }));
 
 export default function ActivityAvatarEditor(props) {
-  const [avatar, setAvatar] = useState(null);
   const [allowValidation, setAllowValidation] = useState(false);
-
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
   return (
     <ClickAwayListener
@@ -40,8 +42,7 @@ export default function ActivityAvatarEditor(props) {
       onClickAway={props.onClose}
     >
       <Popper
-        style={{ zIndex: 2 }}
-        className={classes.popper}
+        style={{ zIndex: 2, display: "inline-block"}}
         aria-labelledby="simple-dialog-title"
         open={props.open}
         anchorEl={props.anchorEl}
@@ -60,19 +61,29 @@ export default function ActivityAvatarEditor(props) {
         //     },
         //   }}
       >
-        <Paper variant="outlined">
+        <StyledPaper p={1} variant="outlined" 
+        //style={{display: "inline-block"}}
+        >
           <AvatarEdit
             width={390}
             height={295}
             onCrop={(avatar) => {
               setAllowValidation(true);
-              setAvatar(avatar);
               props.setNewAvatar(avatar);
             }}
+            onClose={() => props.onClose()}
+            //label="Coucou" //TODO I18N
             //onBeforeFileLoad={this.onBeforeFileLoad}
             src=""
-          />
-        </Paper>
+          >
+          </AvatarEdit>
+          {allowValidation && <DoneOutlineIcon
+            aria-label="Validate"
+            onClick={() => console.log('TODO')}
+            className={classes.validateButton}/>
+
+          }
+        </StyledPaper>
       </Popper>
     </ClickAwayListener>
   );
