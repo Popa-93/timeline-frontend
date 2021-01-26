@@ -10,8 +10,6 @@ import ActivitySelection from "./ActivitySelection";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import { makeStyles } from "@material-ui/core/styles";
 
-
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     padding: 0,
@@ -23,10 +21,10 @@ export default function RecordActivity(props) {
   const [activitySelectionOpened, setActivitySelectionOpened] = useState(false);
   const [activityIconRef, setActivityIconRef] = useState();
 
+  console.log("Render RecordActivity");
   return (
-    <Box
-    ref={setActivityIconRef}> 
-       <ActivitySelection
+    <Box ref={setActivityIconRef}>
+      <ActivitySelection
         open={activitySelectionOpened}
         onClose={() => setActivitySelectionOpened(false)}
         activityIconRef={activityIconRef}

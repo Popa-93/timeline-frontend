@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 import Avatar from "@material-ui/core/Avatar";
+import Dialog from "@material-ui/core/Dialog";
 import Input from "@material-ui/core/Input";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -18,7 +19,7 @@ import PropTypes from "prop-types";
 const useStyles = makeStyles((theme) => ({
   popper: {
     zIndex: 1,
-    display:"inline-block",
+    display: "inline-block",
 
     '&[x-placement*="right"] $arrow': {
       left: 0,
@@ -50,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
-  const [addActivityIconRef, setAddActivityIconRef] = useState(null);
   const [newAvatar, setNewAvatar] = useState(null);
   const [newAvatarName, setNewAvatarName] = useState("");
   const classes = useStyles();
@@ -59,7 +59,9 @@ export default function ActivitySelection(props) {
     <ClickAwayListener
       mouseEvent="onMouseDown"
       touchEvent="onTouchStart"
-      onClickAway={props.onClose}
+      onClickAway={() => {
+        props.onClose();
+      }}
     >
       <Popper
         className={classes.popper}
@@ -67,15 +69,13 @@ export default function ActivitySelection(props) {
         open={props.open}
         anchorEl={props.activityIconRef}
         placement={"right-start"}
-        //disablePortal={false}
         modifiers={{
-          // flip: {
-          //   enabled: true,
-          // },
-          // preventOverflow: {
-          //   enabled: true,
-          //   boundariesElement: "scrollParent",
-          // },
+          hide: {
+            enabled: false,
+          },
+          preventOverflow: {
+            enabled: false,
+          },
           arrow: {
             enabled: true,
             element: arrowRef,
@@ -111,16 +111,38 @@ export default function ActivitySelection(props) {
                 {/* TODO Limit input size On all Inputs */}
               </ListItemText>
             </ListItem>
-            <ListItem autoFocus button onClick={() => setEditorOpened(true)}>
-              <ActivityAvatarEditor
-                anchorEl={addActivityIconRef}
+            <ListItem
+              autoFocus
+              button
+              onClick={() => {
+                setEditorOpened(true);
+              }}
+            >
+              <Dialog
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                }}
+                style={{ zIndex: 2, display: "inline-block" }}
+                aria-labelledby="Avatar editor"
                 open={editorOpened}
-                setNewAvatar={setNewAvatar}
-                onClose={() => setEditorOpened(false)}
-              />
+                onClose={() => {
+                  setEditorOpened(false);
+                  props.onClose();
+                }}
+              >
+                <ActivityAvatarEditor
+                  open={editorOpened}
+                  setNewAvatar={(newAvatar) => {
+                    setEditorOpened(false);
+                  }}
+                  onClose={() => {
+                    setEditorOpened(false);
+                  }}
+                />
+              </Dialog>
               <ListItemAvatar>
                 <Avatar>
-                  <AddIcon ref={setAddActivityIconRef} />
+                  <AddIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Add category" />
@@ -129,8 +151,8 @@ export default function ActivitySelection(props) {
           </List>
         </Paper>
       </Popper>
-    </ClickAwayListener>);
-  
+    </ClickAwayListener>
+  );
 }
 
 ActivitySelection.propTypes = {

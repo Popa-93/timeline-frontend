@@ -124,6 +124,7 @@ export default function RecordItem(props) {
   //   postTitleToBackend.current(timelineID, e.target.value);
   // }
   const [activitySectionRef, setActivitySectionRef] = useState(null);
+  console.log("Render RecordItem ", title);
   return (
     <TimelineItem>
       <TimelineOppositeContent>
