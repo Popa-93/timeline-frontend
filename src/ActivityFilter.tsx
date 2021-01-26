@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,7 +7,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
 import { ReactComponent as FilterIcon } from "./filter.svg";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { IdentContext } from "./App";
 import Box from "@material-ui/core/Box";
 
 import PropTypes from "prop-types";
@@ -51,43 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ActivityFilter(props) {
   const classes = useStyles();
-  const { ident } = useContext(IdentContext);
-  const [activities, setActivities] = useState([]);
-  const { filter, setFilter } = props;
-  useEffect(() => {
-    if (ident === null) {
-      setActivities(null);
-    } else {
-      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
-        credentials: "include",
-      })
-        .then((response) => {
-          console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
-          if (!response.ok) {
-            setActivities(null);
-            console.warn(
-              `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
-                response.status
-            );
-          }
-          return response.json();
-        })
-        .then(
-          (response) => {
-            console.log("** OK ** SET ACTIVITIES AND FILTERS ** ");
-            setFilter(response.results.map((activity) => activity.id));
-            setActivities(response.results);
-          },
-          (error) => {
-            setActivities(null);
-            console.warn(
-              "Error during activities initialization fetch :",
-              error
-            );
-          }
-        );
-    }
-  }, [ident, setFilter]);
+  const { filter, setFilter, activities } = props;
 
   const handleToggle = (activityId) => () => {
     const currentIndex = filter.indexOf(activityId);
@@ -157,6 +120,7 @@ export default function ActivityFilter(props) {
 }
 
 ActivityFilter.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.object).isRequired,
   filter: PropTypes.arrayOf(PropTypes.number).isRequired,
   setFilter: PropTypes.func.isRequired,
 };
