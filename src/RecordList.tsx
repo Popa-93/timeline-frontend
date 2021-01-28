@@ -61,7 +61,9 @@ function RecordList(props) {
               date={new Date(record.date)}
               title={record.title}
               description={record.description}
-              activityID={record.ActivityID}
+              activityID={record.activityID}
+              activities={props.activities}
+              setActivities={props.setActivities}
             />
           ))}
     </Timeline>
@@ -69,6 +71,8 @@ function RecordList(props) {
 }
 
 RecordList.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setActivities: PropTypes.func.isRequired,
   filter: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 

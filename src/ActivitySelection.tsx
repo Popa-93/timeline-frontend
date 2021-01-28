@@ -89,28 +89,41 @@ export default function ActivitySelection(props) {
         <span className={classes.arrow} ref={setArrowRef} />
         <Paper variant="outlined">
           <List>
-            <ListItem button onClick={() => console.log("Set cat")}>
-              <ListItemAvatar>
-                <Avatar src={newAvatar}></Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log("Edit cat name");
-                }}
-              >
-                <Input
-                  fullWidth
-                  disableUnderline
-                  //readOnly To switch mode TODO
-                  value={newAvatarName}
-                  onChange={(e) => setNewAvatarName(e.target.value)}
-                  placeholder="Titre"
-                />
-                {/* TODO Limit input size On all Inputs */}
-              </ListItemText>
-            </ListItem>
+            {props.activities &&
+              props.activities.map((activity) => {
+                return (
+                  <ListItem
+                    key={activity.id}
+                    button
+                    onClick={() => props.updateActivityID(activity.id)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar src={activity.avatar}></Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log("Edit cat name");
+                      }}
+                    >
+                      <Input
+                        fullWidth
+                        disableUnderline
+                        //readOnly To switch mode TODO
+                        value={activity.name}
+                        onChange={
+                          //TODO
+                          (e) => props.setNewAvatarName(e.target.value)
+                        }
+                        placeholder="Titre"
+                        //TODO I18N
+                      />
+                      {/* TODO Limit input size On all Inputs */}
+                    </ListItemText>
+                  </ListItem>
+                );
+              })}
             <ListItem
               autoFocus
               button
@@ -159,4 +172,7 @@ ActivitySelection.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   activityIconRef: PropTypes.object.isRequired,
+  activities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setActivities: PropTypes.func.isRequired,
+  updateActivityID: PropTypes.func.isRequired,
 };

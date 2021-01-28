@@ -99,9 +99,9 @@ export default function ActivityFilter(props) {
                     enterDelay={500}
                   >
                     <Avatar
-                      variant="square"
+                      //variant="square"
                       alt={activity.name}
-                      src={`${process.env.PUBLIC_URL}/images/skills/python.png`}
+                      src={activity.avatar}
                       className={`${classes.activity} ${
                         filter && filter.includes(activity.id)
                           ? classes.activitySelected

@@ -5,9 +5,13 @@ import { useState } from "react";
 
 import PropTypes from "prop-types";
 import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
+import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ActivitySelection from "./ActivitySelection";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+//TODO Use it for undefined
+//import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,29 +25,45 @@ export default function RecordActivity(props) {
   const [activitySelectionOpened, setActivitySelectionOpened] = useState(false);
   const [activityIconRef, setActivityIconRef] = useState();
 
-  console.log("Render RecordActivity");
   return (
     <Box ref={setActivityIconRef}>
-      <ActivitySelection
-        open={activitySelectionOpened}
-        onClose={() => setActivitySelectionOpened(false)}
-        activityIconRef={activityIconRef}
-        //activitySectionRef={props.activitySectionRef}
-        //TODO REmove once decided
-      />
+      {activityIconRef && (
+        <ActivitySelection
+          open={activitySelectionOpened}
+          onClose={() => setActivitySelectionOpened(false)}
+          activityIconRef={activityIconRef}
+          activities={props.activities}
+          setActivities={props.setActivities}
+          updateActivityID={props.updateActivityID}
+        />
+      )}
       <IconButton
         className={classes.icon}
         aria-label="activity"
         onClick={() => setActivitySelectionOpened(true)}
       >
-        <HelpOutlineIcon fontSize="large" />
+        {props.activities &&
+          props.activities
+            .filter((activity) => activity.id === props.activityID)
+            .map((activity) => (
+              <Tooltip
+                key={activity.id}
+                title={activity.name}
+                placement="right"
+                TransitionProps={{ timeout: 600 }}
+                enterDelay={500}
+              >
+                <Avatar alt={activity.name} src={activity.avatar} />
+              </Tooltip>
+            ))}
       </IconButton>
     </Box>
   );
 }
 
 RecordActivity.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setActivities: PropTypes.func.isRequired,
   activityID: PropTypes.number.isRequired,
   updateActivityID: PropTypes.func.isRequired,
-  activitySectionRef: PropTypes.object.isRequired,
 };

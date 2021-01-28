@@ -43,11 +43,9 @@ export default function UserIdent() {
       <GoogleLogin
         clientId={process.env.REACT_APP_GOOGLE_APP_CLIENTID}
         buttonText="Login"
-        
-        accessType ="online"
-        responseType = "token"
-        onSuccess={(receivedObj : GoogleLoginResponse) => {
-          console.log("GoogleLogin : googleObj :", receivedObj);
+        accessType="online"
+        responseType="token"
+        onSuccess={(receivedObj: GoogleLoginResponse) => {
           // TODO Move this in context management on setIdent?
           fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/auth/google/`, {
             method: "POST",
@@ -57,18 +55,12 @@ export default function UserIdent() {
               "content-type": "application/json",
             },
             body: JSON.stringify({
-              access_token: receivedObj.accessToken
+              access_token: receivedObj.accessToken,
             }),
           })
             .then((response) => {
-              console.log("**TRY TO** AUTH ON BACKEND"); //TODO Remove
               if (!response.ok) {
                 // TODO Cleanup this crap and manage asynch log cleanly
-                console.log("** AUTH ON BACKEND ** KO");
-                console.log(
-                  "Response status ",
-                  response.status + " \n text " + response.statusText
-                );
                 response.text().then(function (text) {
                   console.log("TXT =", text);
                 });
@@ -78,12 +70,10 @@ export default function UserIdent() {
                     response.status
                 );
               }
-              console.log("** AUTH ON BACKEND ** OK");
               return response.json();
             })
             .then(
               (response) => {
-                console.log("setIdent to ", receivedObj);
                 setIdent(receivedObj);
                 return response.results;
               },

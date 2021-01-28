@@ -28,6 +28,7 @@ function App() {
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
 
+  //TODO Remove or use for new Record Adds?
   useEffect(() => {
     const doSomethingBeforeUnload = () => {
       console.log("Closing");
@@ -39,7 +40,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("useEffect  -> activities");
     if (ident === null) {
       setActivities(null);
     } else {
@@ -47,7 +47,7 @@ function App() {
         credentials: "include",
       })
         .then((response) => {
-          console.log("**TRY TO** SET ACTIVITIES AND FILTERS");
+          console.log("TODO DEL **TRY TO** SET ACTIVITIES AND FILTERS");
           if (!response.ok) {
             setActivities(null);
             console.warn(
@@ -59,7 +59,8 @@ function App() {
         })
         .then(
           (response) => {
-            console.log("** OK ** SET ACTIVITIES AND FILTERS ** ");
+            console.log("TODO DEL ** OK ** SET ACTIVITIES AND FILTERS ** ");
+            console.log("TODO DEL activities =", response.results);
             setFilter(response.results.map((activity) => activity.id));
             setActivities(response.results);
           },
@@ -129,7 +130,7 @@ function App() {
             >
               <Grid item xs={1} container justify="center" alignItems="center">
                 <Grid item xs={12}>
-                  {ident && (
+                  {activities && (
                     <ActivityFilter
                       activities={activities}
                       filter={filter}
@@ -147,7 +148,13 @@ function App() {
                       overflow: "auto",
                     }}
                   >
-                    <RecordList filter={filter} />
+                    {activities && (
+                      <RecordList
+                        activities={activities}
+                        setActivities={setActivities}
+                        filter={filter}
+                      />
+                    )}
                   </div>
                 </Grid>
               </Grid>

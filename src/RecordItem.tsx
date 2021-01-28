@@ -22,6 +22,7 @@ export default function RecordItem(props) {
 
   //Debounce API call after onChange
   const postRecordToBackend = useRef(null);
+
   useEffect(() => {
     const postRecord = (
       timelineID,
@@ -38,7 +39,9 @@ export default function RecordItem(props) {
         date.getMonth() + 1
       )}-${twoDigitFormater.format(date.getDate())}`;
 
-      console.log("djangoFormatedDate =", djangoFormatedDate);
+      console.log("postRecord, title =", title);
+      console.log("postRecord, activity =", activity);
+
       fetch(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/${recordID}/`,
         {
@@ -53,28 +56,18 @@ export default function RecordItem(props) {
             date: djangoFormatedDate,
             title: title,
             description: description,
-            activity: activity,
+            activityID: activity,
           }),
         }
       ).then((response) => {
-        console.log("**TRY TO** PATCH RECORD ON BACKEND"); //TODO Remove
         if (!response.ok) {
           // TODO Cleanup this crap and manage asynch log cleanly
-          console.log("**PATCH RECORD ** KO");
-          console.log(
-            "Response status ",
-            response.status + " \n text " + response.statusText
-          );
-          response.text().then(function (text) {
-            console.log("TXT =", text);
-          });
-
           throw new Error(
             `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/ return status ` +
-              response.status
+              response.status +
+              response.statusText
           );
         }
-        console.log("** PATCH RECORD ** OK");
       });
     };
     postRecordToBackend.current = debounce(postRecord, 500);
@@ -107,6 +100,10 @@ export default function RecordItem(props) {
   };
 
   const updateActivityID = (activityIDToSet) => {
+    console.log(
+      "Baaaaaaawa updateActivityID, activityIDToSet =",
+      activityIDToSet
+    );
     setActivityID(activityIDToSet);
     postRecordToBackend.current(
       props.timelineID,
@@ -118,28 +115,20 @@ export default function RecordItem(props) {
     );
   };
 
-  // function changeTitle(e) {
-
-  //   setTitle(e.target.value);
-  //   postTitleToBackend.current(timelineID, e.target.value);
-  // }
-  const [activitySectionRef, setActivitySectionRef] = useState(null);
-  console.log("Render RecordItem ", title);
   return (
     <TimelineItem>
       <TimelineOppositeContent>
         <RecordDate date={date} updateDate={updateDate} />
       </TimelineOppositeContent>
       <TimelineSeparator>
-        <div>
-          <TimelineDot ref={setActivitySectionRef}>
-            <RecordActivity
-              activityID={activityID}
-              updateActivityID={updateActivityID}
-              activitySectionRef={activitySectionRef}
-            />
-          </TimelineDot>
-        </div>
+        <TimelineDot>
+          <RecordActivity
+            activityID={activityID}
+            updateActivityID={updateActivityID}
+            activities={props.activities}
+            setActivities={props.setActivities}
+          />
+        </TimelineDot>
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
@@ -164,4 +153,6 @@ RecordItem.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   activityID: PropTypes.number.isRequired,
+  activities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setActivities: PropTypes.func.isRequired,
 };

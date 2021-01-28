@@ -33,9 +33,6 @@ export default function ActivityAvatarEditor(props) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  console.log("ActivityAvatarEditor rerender");
-  console.log("props.open = ", props.open);
-  console.log("allowValidation =", allowValidation);
   return (
     <StyledPaper p={1} variant="outlined">
       <AvatarEdit

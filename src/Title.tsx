@@ -25,14 +25,8 @@ export default function Title(props) {
         }),
       })
         .then((response) => {
-          console.log("**TRY TO** POST BLANCK TIMELINE ON BACKEND"); //TODO Remove
           if (!response.ok) {
             // TODO Cleanup this crap and manage asynch log cleanly
-            console.log("** POST BLANCK TIMELINE ON BACKEND ** KO");
-            console.log(
-              "Response status ",
-              response.status + " \n text " + response.statusText
-            );
             response.text().then(function (text) {
               console.log("TXT =", text);
             });
@@ -42,10 +36,6 @@ export default function Title(props) {
                 response.status
             );
           }
-          console.log(
-            "** POST BLANCK TIMELINE ON BACKEND ** OK, reponse=",
-            response
-          );
           return response.json();
         })
         .then(
@@ -70,7 +60,6 @@ export default function Title(props) {
         credentials: "include",
       })
         .then((response) => {
-          console.log("**TRY TO** GET Timelines");
           if (!response.ok) {
             setTimelineID(null);
             setTitle("");
@@ -83,7 +72,6 @@ export default function Title(props) {
         })
         .then(
           (response) => {
-            console.log("** OK ** GET Timelines ** response = ", response);
             if (response.results.length > 0) {
               setTimelineID(response.results[0].id);
               setTitle(response.results[0].title); //TODO Manage multiple timeline
@@ -105,7 +93,6 @@ export default function Title(props) {
   const postTitleToBackend = useRef(null);
   useEffect(() => {
     const postTitle = (id, newTitle) => {
-      console.log("posttTitle, newTitle =", newTitle);
       fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/timelines/${id}/`, {
         method: "PATCH",
         credentials: "include",
@@ -117,18 +104,8 @@ export default function Title(props) {
           title: newTitle,
         }),
       }).then((response) => {
-        console.log("**TRY TO** PATCH TIMELINE TITLE ON BACKEND"); //TODO Remove
         if (!response.ok) {
           // TODO Cleanup this crap and manage asynch log cleanly
-          console.log("**PATCH TIMELINE TITLE ** KO");
-          console.log(
-            "Response status ",
-            response.status + " \n text " + response.statusText
-          );
-          response.text().then(function (text) {
-            console.log("TXT =", text);
-          });
-
           throw new Error(
             `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/timelines/ return status ` +
               response.status
