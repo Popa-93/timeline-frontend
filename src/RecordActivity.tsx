@@ -33,7 +33,7 @@ export default function RecordActivity(props) {
           onClose={() => setActivitySelectionOpened(false)}
           activityIconRef={activityIconRef}
           activities={props.activities}
-          setActivities={props.setActivities}
+          addActivity={props.addActivity}
           updateActivityID={props.updateActivityID}
         />
       )}
@@ -63,7 +63,7 @@ export default function RecordActivity(props) {
 
 RecordActivity.propTypes = {
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setActivities: PropTypes.func.isRequired,
+  addActivity: PropTypes.func.isRequired,
   activityID: PropTypes.number.isRequired,
   updateActivityID: PropTypes.func.isRequired,
 };

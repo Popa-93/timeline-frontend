@@ -21,6 +21,7 @@ export const IdentContext = React.createContext({
 
 function App() {
   const [ident, setIdent] = useState(null);
+  //TODO Link activiies and filter in the same state or use Redux
   const [activities, setActivities] = useState([]); //Shared among ActivityFilter & ActivitySelection (in Record)
   const [filter, setFilter] = useState([]); //Shared among ActivityFilter & Record rendering (applying filter)
 
@@ -39,6 +40,48 @@ function App() {
     });
   }, []);
 
+  const addActivity = (avatar, name) => {
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    formData.append("name", "");
+
+    fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        accept: "*/*",
+      },
+      body: formData,
+    }).then((response) => {
+      if (!response.ok) {
+        // TODO Cleanup this crap and manage asynch log cleanly
+        console.log(
+          `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
+            response.status +
+            response.statusText
+        );
+        response.json().then((respBody) => {
+          throw new Error(
+            `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status= ` +
+              response.status +
+              " statusText= " +
+              response.statusText +
+              " " +
+              respBody
+          );
+        });
+      } else {
+        response.json().then((respBody) => {
+          setActivities([
+            ...activities,
+            { id: respBody.id, name: respBody.name, avatar: respBody.avatar },
+          ]);
+          setFilter([...filter, respBody.id]);
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     if (ident === null) {
       setActivities(null);
@@ -47,7 +90,6 @@ function App() {
         credentials: "include",
       })
         .then((response) => {
-          console.log("TODO DEL **TRY TO** SET ACTIVITIES AND FILTERS");
           if (!response.ok) {
             setActivities(null);
             console.warn(
@@ -59,8 +101,6 @@ function App() {
         })
         .then(
           (response) => {
-            console.log("TODO DEL ** OK ** SET ACTIVITIES AND FILTERS ** ");
-            console.log("TODO DEL activities =", response.results);
             setFilter(response.results.map((activity) => activity.id));
             setActivities(response.results);
           },
@@ -151,7 +191,7 @@ function App() {
                     {activities && (
                       <RecordList
                         activities={activities}
-                        setActivities={setActivities}
+                        addActivity={addActivity}
                         filter={filter}
                       />
                     )}

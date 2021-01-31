@@ -99,7 +99,7 @@ export default function ActivityFilter(props) {
                     enterDelay={500}
                   >
                     <Avatar
-                      //variant="square"
+                      variant="square"
                       alt={activity.name}
                       src={activity.avatar}
                       className={`${classes.activity} ${

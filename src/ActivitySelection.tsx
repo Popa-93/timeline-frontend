@@ -51,8 +51,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
-  const [newAvatar, setNewAvatar] = useState(null);
-  const [newAvatarName, setNewAvatarName] = useState("");
   const classes = useStyles();
 
   return (
@@ -95,12 +93,18 @@ export default function ActivitySelection(props) {
                   <ListItem
                     key={activity.id}
                     button
-                    onClick={() => props.updateActivityID(activity.id)}
+                    onClick={() => {
+                      props.onClose();
+                      props.updateActivityID(activity.id);
+                    }}
                   >
                     <ListItemAvatar>
                       <Avatar src={activity.avatar}></Avatar>
                     </ListItemAvatar>
                     <ListItemText
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                      }}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -134,19 +138,25 @@ export default function ActivitySelection(props) {
               <Dialog
                 onMouseDown={(e) => {
                   e.stopPropagation();
+                  // To prevent ripple effect on parent item
                 }}
                 style={{ zIndex: 2, display: "inline-block" }}
                 aria-labelledby="Avatar editor"
                 open={editorOpened}
                 onClose={() => {
                   setEditorOpened(false);
-                  props.onClose();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Dialog is closed on backdrop click
+                  // This stop prevent dialog reopening (click tranmitted to parent)
                 }}
               >
                 <ActivityAvatarEditor
                   open={editorOpened}
-                  setNewAvatar={(newAvatar) => {
+                  onValidate={(newAvatar) => {
                     setEditorOpened(false);
+                    props.addActivity(newAvatar, "");
                   }}
                   onClose={() => {
                     setEditorOpened(false);
@@ -158,6 +168,7 @@ export default function ActivitySelection(props) {
                   <AddIcon />
                 </Avatar>
               </ListItemAvatar>
+
               <ListItemText primary="Add category" />
               {/* //TODO I18n */}
             </ListItem>
@@ -173,6 +184,6 @@ ActivitySelection.propTypes = {
   onClose: PropTypes.func.isRequired,
   activityIconRef: PropTypes.object.isRequired,
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setActivities: PropTypes.func.isRequired,
+  addActivity: PropTypes.func.isRequired,
   updateActivityID: PropTypes.func.isRequired,
 };

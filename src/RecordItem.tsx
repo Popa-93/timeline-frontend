@@ -39,9 +39,6 @@ export default function RecordItem(props) {
         date.getMonth() + 1
       )}-${twoDigitFormater.format(date.getDate())}`;
 
-      console.log("postRecord, title =", title);
-      console.log("postRecord, activity =", activity);
-
       fetch(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/${recordID}/`,
         {
@@ -100,10 +97,6 @@ export default function RecordItem(props) {
   };
 
   const updateActivityID = (activityIDToSet) => {
-    console.log(
-      "Baaaaaaawa updateActivityID, activityIDToSet =",
-      activityIDToSet
-    );
     setActivityID(activityIDToSet);
     postRecordToBackend.current(
       props.timelineID,
@@ -116,33 +109,35 @@ export default function RecordItem(props) {
   };
 
   return (
-    <TimelineItem>
-      <TimelineOppositeContent>
-        <RecordDate date={date} updateDate={updateDate} />
-      </TimelineOppositeContent>
-      <TimelineSeparator>
-        <TimelineDot>
-          <RecordActivity
-            activityID={activityID}
-            updateActivityID={updateActivityID}
-            activities={props.activities}
-            setActivities={props.setActivities}
+    props.filter.includes(activityID) && (
+      <TimelineItem>
+        <TimelineOppositeContent>
+          <RecordDate date={date} updateDate={updateDate} />
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot>
+            <RecordActivity
+              activityID={activityID}
+              updateActivityID={updateActivityID}
+              activities={props.activities}
+              addActivity={props.addActivity}
+            />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent>
+          <RecordContent
+            timelineID={props.timelineID}
+            recordID={props.recordID}
+            title={title}
+            setTitle={setTitle}
+            description={description}
+            setDescription={setDescription}
+            updateContent={updateContent}
           />
-        </TimelineDot>
-        <TimelineConnector />
-      </TimelineSeparator>
-      <TimelineContent>
-        <RecordContent
-          timelineID={props.timelineID}
-          recordID={props.recordID}
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          updateContent={updateContent}
-        />
-      </TimelineContent>
-    </TimelineItem>
+        </TimelineContent>
+      </TimelineItem>
+    )
   );
 }
 
@@ -154,5 +149,6 @@ RecordItem.propTypes = {
   description: PropTypes.string.isRequired,
   activityID: PropTypes.number.isRequired,
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setActivities: PropTypes.func.isRequired,
+  addActivity: PropTypes.func.isRequired,
+  filter: PropTypes.arrayOf(PropTypes.number),
 };

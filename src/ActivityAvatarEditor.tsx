@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ActivityAvatarEditor(props) {
-  const [avatar, setAvatar] = useState(""); //TODO precise avatar format png Img
   const [allowValidation, setAllowValidation] = useState(false);
+  const [avatar, setAvatar] = useState("");
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -38,14 +38,13 @@ export default function ActivityAvatarEditor(props) {
       <AvatarEdit
         width={390}
         height={295}
-        onCrop={(avatar) => {
+        onCrop={(newAvatar) => {
           //TODO console.log("Oncrop Avatar =", avatar);
-          setAvatar(avatar);
+          setAvatar(newAvatar);
           setAllowValidation(true);
         }}
         onClose={() => props.onClose()}
         //label="Coucou" //TODO I18N
-        //onBeforeFileLoad={this.onBeforeFileLoad}
         src=""
       ></AvatarEdit>
       {allowValidation && (
@@ -54,6 +53,7 @@ export default function ActivityAvatarEditor(props) {
           onClick={(e) => {
             e.stopPropagation();
             props.onClose();
+            props.onValidate(avatar);
           }}
           className={classes.validateButton}
         />
@@ -64,6 +64,6 @@ export default function ActivityAvatarEditor(props) {
 
 ActivityAvatarEditor.propTypes = {
   open: PropTypes.bool.isRequired,
-  setNewAvatar: PropTypes.func.isRequired,
+  onValidate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };

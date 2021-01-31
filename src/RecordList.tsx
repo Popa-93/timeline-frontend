@@ -52,7 +52,8 @@ function RecordList(props) {
     >
       {records &&
         records
-          .filter((record) => props.filter.includes(record.activityID))
+          // Below wouls be nice but I need to apply filter in RecordItem as the activity can be updated at this level
+          // .filter((record) => props.filter.includes(record.activityID))
           .map((record) => (
             <RecordItem
               key={record.id}
@@ -63,7 +64,8 @@ function RecordList(props) {
               description={record.description}
               activityID={record.activityID}
               activities={props.activities}
-              setActivities={props.setActivities}
+              addActivity={props.addActivity}
+              filter={props.filter}
             />
           ))}
     </Timeline>
@@ -72,7 +74,7 @@ function RecordList(props) {
 
 RecordList.propTypes = {
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setActivities: PropTypes.func.isRequired,
+  addActivity: PropTypes.func.isRequired,
   filter: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
