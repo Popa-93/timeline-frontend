@@ -109,7 +109,8 @@ export default function RecordItem(props) {
   };
 
   return (
-    props.filter.includes(activityID) && (
+    //Note: activityID = null correspond to uncategorised activity
+    (activityID === null || props.filter.includes(activityID)) && (
       <TimelineItem>
         <TimelineOppositeContent>
           <RecordDate date={date} updateDate={updateDate} />
@@ -118,9 +119,10 @@ export default function RecordItem(props) {
           <TimelineDot>
             <RecordActivity
               activityID={activityID}
-              updateActivityID={updateActivityID}
+              updateActivityIDInRecord={updateActivityID}
               activities={props.activities}
               addActivity={props.addActivity}
+              updateActivity={props.updateActivity}
             />
           </TimelineDot>
           <TimelineConnector />
@@ -150,5 +152,6 @@ RecordItem.propTypes = {
   activityID: PropTypes.number.isRequired,
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
   addActivity: PropTypes.func.isRequired,
+  updateActivity: PropTypes.func.isRequired,
   filter: PropTypes.arrayOf(PropTypes.number),
 };

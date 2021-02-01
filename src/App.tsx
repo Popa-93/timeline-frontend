@@ -21,7 +21,9 @@ export const IdentContext = React.createContext({
 
 function App() {
   const [ident, setIdent] = useState(null);
+
   //TODO Link activiies and filter in the same state or use Redux
+  // -> Optimize / remove the crappy double rendering on update
   const [activities, setActivities] = useState([]); //Shared among ActivityFilter & ActivitySelection (in Record)
   const [filter, setFilter] = useState([]); //Shared among ActivityFilter & Record rendering (applying filter)
 
@@ -39,6 +41,11 @@ function App() {
       return doSomethingBeforeUnload();
     });
   }, []);
+
+  const updateActivity = (id, avatar, name) => {
+    console.log("updateActivity");
+    //TODO    setActivities();
+  };
 
   const addActivity = (avatar, name) => {
     const formData = new FormData();
@@ -72,10 +79,7 @@ function App() {
         });
       } else {
         response.json().then((respBody) => {
-          setActivities([
-            ...activities,
-            { id: respBody.id, name: respBody.name, avatar: respBody.avatar },
-          ]);
+          setActivities([...activities, respBody]);
           setFilter([...filter, respBody.id]);
         });
       }
@@ -190,8 +194,10 @@ function App() {
                   >
                     {activities && (
                       <RecordList
+                        timelineID={timelineID}
                         activities={activities}
                         addActivity={addActivity}
+                        updateActivity={updateActivity}
                         filter={filter}
                       />
                     )}

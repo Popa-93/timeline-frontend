@@ -95,7 +95,7 @@ export default function ActivitySelection(props) {
                     button
                     onClick={() => {
                       props.onClose();
-                      props.updateActivityID(activity.id);
+                      props.updateActivityIDInRecord(activity.id);
                     }}
                   >
                     <ListItemAvatar>
@@ -108,7 +108,8 @@ export default function ActivitySelection(props) {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log("Edit cat name");
+                        // To prevent item selection in list
+                        // -> Allowing inline name category'name edition
                       }}
                     >
                       <Input
@@ -118,7 +119,12 @@ export default function ActivitySelection(props) {
                         value={activity.name}
                         onChange={
                           //TODO
-                          (e) => props.setNewAvatarName(e.target.value)
+                          (e) =>
+                            props.updateActivity(
+                              activity.id,
+                              activity.avatar,
+                              e.target.value
+                            )
                         }
                         placeholder="Titre"
                         //TODO I18N
@@ -185,5 +191,6 @@ ActivitySelection.propTypes = {
   activityIconRef: PropTypes.object.isRequired,
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
   addActivity: PropTypes.func.isRequired,
-  updateActivityID: PropTypes.func.isRequired,
+  updateActivity: PropTypes.func.isRequired,
+  updateActivityIDInRecord: PropTypes.func.isRequired,
 };

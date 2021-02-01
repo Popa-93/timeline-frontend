@@ -34,7 +34,8 @@ export default function RecordActivity(props) {
           activityIconRef={activityIconRef}
           activities={props.activities}
           addActivity={props.addActivity}
-          updateActivityID={props.updateActivityID}
+          updateActivity={props.updateActivity}
+          updateActivityIDInRecord={props.updateActivityIDInRecord}
         />
       )}
       <IconButton
@@ -64,6 +65,7 @@ export default function RecordActivity(props) {
 RecordActivity.propTypes = {
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
   addActivity: PropTypes.func.isRequired,
+  updateActivity: PropTypes.func.isRequired,
   activityID: PropTypes.number.isRequired,
-  updateActivityID: PropTypes.func.isRequired,
+  updateActivityIDInRecord: PropTypes.func.isRequired,
 };
