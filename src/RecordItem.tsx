@@ -15,10 +15,10 @@ import RecordActivity from "./RecordActivity";
 import { debounce } from "lodash";
 
 export default function RecordItem(props) {
-  const [date, setDate] = useState(props.date);
-  const [title, setTitle] = useState(props.title);
-  const [description, setDescription] = useState(props.description);
-  const [activityID, setActivityID] = useState(props.activityID);
+  const [date, setDate] = useState(props.record.date);
+  const [title, setTitle] = useState(props.record.title);
+  const [description, setDescription] = useState(props.record.description);
+  const [activityID, setActivityID] = useState(props.record.activityID);
 
   //Debounce API call after onChange
   const postRecordToBackend = useRef(null);
@@ -75,8 +75,8 @@ export default function RecordItem(props) {
     setTitle(titleToSet);
     setDescription(descriptionToSet);
     postRecordToBackend.current(
-      props.timelineID,
-      props.recordID,
+      props.record.timelineID,
+      props.record.id,
       date,
       titleToSet,
       descriptionToSet,
@@ -86,9 +86,15 @@ export default function RecordItem(props) {
 
   const updateDate = (dateToSet) => {
     setDate(dateToSet);
+
+    //Reorder RecordList
+    const updatedRecord = props.record;
+    updatedRecord.date = dateToSet;
+    props.updateRecord(updatedRecord);
+
     postRecordToBackend.current(
-      props.timelineID,
-      props.recordID,
+      props.record.timelineID,
+      props.record.id,
       dateToSet,
       title,
       description,
@@ -99,8 +105,8 @@ export default function RecordItem(props) {
   const updateActivityID = (activityIDToSet) => {
     setActivityID(activityIDToSet);
     postRecordToBackend.current(
-      props.timelineID,
-      props.recordID,
+      props.record.timelineID,
+      props.record.id,
       date,
       title,
       description,
@@ -129,8 +135,8 @@ export default function RecordItem(props) {
         </TimelineSeparator>
         <TimelineContent>
           <RecordContent
-            timelineID={props.timelineID}
-            recordID={props.recordID}
+            timelineID={props.record.timelineID}
+            recordID={props.record.id}
             title={title}
             setTitle={setTitle}
             description={description}
@@ -144,14 +150,18 @@ export default function RecordItem(props) {
 }
 
 RecordItem.propTypes = {
-  timelineID: PropTypes.number.isRequired,
-  recordID: PropTypes.number.isRequired,
-  date: PropTypes.instanceOf(Date),
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  activityID: PropTypes.number.isRequired,
+  record: PropTypes.shape({
+    timelineID: PropTypes.number.isRequired,
+    id: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    activityID: PropTypes.number.isRequired,
+  }).isRequired,
+
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,
   addActivity: PropTypes.func.isRequired,
   updateActivity: PropTypes.func.isRequired,
   filter: PropTypes.arrayOf(PropTypes.number),
+  updateRecord: PropTypes.func.isRequired,
 };

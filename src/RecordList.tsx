@@ -33,7 +33,10 @@ function RecordList(props) {
   //TODO Create a custom hook to handle fetch
   // -> https://www.robinwieruch.de/react-hooks-fetch-data
 
-  console.log("REcords =", records);
+  const convertRecordDate = (record) => {
+    record.date = parse(record.date, "yyyy-MM-dd", new Date());
+    return record;
+  };
 
   const addRecord = () => {
     //Create an empty newRecord in DB (needed to enable inline editeding in lower components)
@@ -54,7 +57,7 @@ function RecordList(props) {
     }).then((response) => {
       if (!response.ok) {
         // TODO Cleanup this crap and manage asynch log cleanly
-        response.text().then((text) => console.log(text));
+        //response.text().then((text) => console.log(text));
         response.json().then((respBody) => {
           throw new Error(
             `POST ${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/ return status= ` +
@@ -68,7 +71,7 @@ function RecordList(props) {
       } else {
         //RecordList.tsx:65 {"id":5,"title":"","date":"2021-01-31","description":"","activityID":null,"timelineID":1}
         response.json().then((respBody) => {
-          setRecords([respBody, ...records]);
+          setRecords([convertRecordDate(respBody), ...records]);
         });
       }
     });
@@ -94,7 +97,7 @@ function RecordList(props) {
         .then((res) => res.json())
         .then(
           (res) => {
-            setRecords(res.results);
+            setRecords(res.results.map(convertRecordDate));
             //TODO setIsLoading(false);
           },
           (error) => {
@@ -135,27 +138,30 @@ function RecordList(props) {
         {records &&
           records
             .slice()
-            .sort((a, b) =>
-              compareAsc(
-                parse(b.date, "yyyy-MM-dd", new Date()),
-                parse(a.date, "yyyy-MM-dd", new Date())
-              )
-            )
+            .sort((a, b) => compareAsc(b.date, a.date))
+
+            // compareAsc(
+            //   parse(b.date, "yyyy-MM-dd", new Date()),
+            //   parse(a.date, "yyyy-MM-dd", new Date())
+            // )
+
             // Below would be nice but I need to apply filter in RecordItem as the activity can be updated at this level
             // .filter((record) => props.filter.includes(record.activityID))
             .map((record) => (
               <RecordItem
                 key={record.id}
-                timelineID={record.timelineID}
-                recordID={record.id}
-                date={new Date(record.date)}
-                title={record.title}
-                description={record.description}
-                activityID={record.activityID}
+                record={record}
                 activities={props.activities}
                 addActivity={props.addActivity}
                 updateActivity={props.updateActivity}
                 filter={props.filter}
+                updateRecord={(updatedRecord) => {
+                  setRecords(
+                    records.map((record) =>
+                      updatedRecord.id === record.id ? updatedRecord : record
+                    )
+                  );
+                }}
               />
             ))}
       </Timeline>
