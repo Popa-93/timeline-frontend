@@ -43,6 +43,7 @@ export default function RecordActivity(props) {
           .filter((activity) => activity.id === props.activityID)
           .map((activity) => (
             <Tooltip
+              key={activity.id}
               title={activity.name}
               placement="right"
               TransitionProps={{ timeout: 600 }}

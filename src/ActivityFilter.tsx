@@ -84,35 +84,38 @@ export default function ActivityFilter(props) {
               <FilterIcon />
             </SvgIcon>
           </Tooltip>
-          {activities.map((activity) => {
-            return (
-              <ListItem
-                key={activity.id}
-                className={classes.listItem}
-                onClick={handleToggle(activity.id)}
-              >
-                <ListItemAvatar>
-                  <Tooltip
-                    title={activity.name}
-                    placement="right"
-                    TransitionProps={{ timeout: 600 }}
-                    enterDelay={500}
-                  >
-                    <Avatar
-                      variant="square"
-                      alt={activity.name}
-                      src={activity.avatar}
-                      className={`${classes.activity} ${
-                        filter && filter.includes(activity.id)
-                          ? classes.activitySelected
-                          : classes.activityNotSelected
-                      }`}
-                    ></Avatar>
-                  </Tooltip>
-                </ListItemAvatar>
-              </ListItem>
-            );
-          })}
+          {activities
+            .slice()
+            .reverse()
+            .map((activity) => {
+              return (
+                <ListItem
+                  key={activity.id}
+                  className={classes.listItem}
+                  onClick={handleToggle(activity.id)}
+                >
+                  <ListItemAvatar>
+                    <Tooltip
+                      title={activity.name}
+                      placement="right"
+                      TransitionProps={{ timeout: 600 }}
+                      enterDelay={500}
+                    >
+                      <Avatar
+                        variant="square"
+                        alt={activity.name}
+                        src={activity.avatar}
+                        className={`${classes.activity} ${
+                          filter && filter.includes(activity.id)
+                            ? classes.activitySelected
+                            : classes.activityNotSelected
+                        }`}
+                      ></Avatar>
+                    </Tooltip>
+                  </ListItemAvatar>
+                </ListItem>
+              );
+            })}
         </List>
       )}
     </Box>
