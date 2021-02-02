@@ -15,11 +15,16 @@ import RecordItem from "./RecordItem";
 const useStyles = makeStyles((theme) => ({
   box: {
     position: "relative",
+    display: "flex",
   },
   fab: {
+    flexShrink: 0,
     position: "sticky",
-    top: theme.spacing(2),
-    left: theme.spacing(2),
+    top: 0,
+    left: 0,
+  },
+  recordlist: {
+    marginLeft: theme.spacing(1),
   },
 }));
 
