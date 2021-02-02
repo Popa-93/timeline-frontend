@@ -111,12 +111,11 @@ export default function Title(props) {
               response.status
           );
         }
-        console.log("** PATCH TIMELINE TITLE ** OK");
       });
     };
 
     postTitleToBackend.current = debounce(postTitle, 500);
-    return postTitleToBackend.current.cancel();
+    return () => postTitleToBackend.current.flush();
   }, []);
 
   function changeTitle(e) {

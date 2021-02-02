@@ -42,15 +42,55 @@ function App() {
     });
   }, []);
 
-  const updateActivity = (id, avatar, name) => {
-    console.log("updateActivity");
-    //TODO    setActivities();
+  const updateActivity = (activityObj) => {
+    const formData = new FormData();
+    activityObj.avatar && formData.append("avatar", activityObj.avatar);
+    activityObj.name && formData.append("name", activityObj.name);
+
+    fetch(
+      `${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/${activityObj.id}/`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          accept: "*/*",
+        },
+        body: formData,
+      }
+    ).then((response) => {
+      if (!response.ok) {
+        // TODO Cleanup this crap and manage asynch log cleanly
+        console.log(
+          `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/${activityObj.id} return status ` +
+            response.status +
+            response.statusText
+        );
+        response.text().then((respBody) => {
+          throw new Error(
+            `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/${activityObj.id} return status= ` +
+              response.status +
+              " statusText= " +
+              response.statusText +
+              " " +
+              respBody
+          );
+        });
+      } else {
+        response.json().then((respBody) => {
+          setActivities(
+            activities.map((activity) =>
+              activity.id === respBody.id ? respBody : activity
+            )
+          );
+        });
+      }
+    });
   };
 
   const addActivity = (avatar, name, updateActivityIDInRecordCallBack) => {
     const formData = new FormData();
     formData.append("avatar", avatar);
-    formData.append("name", "");
+    formData.append("name", name);
 
     fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/`, {
       method: "POST",
@@ -63,13 +103,13 @@ function App() {
       if (!response.ok) {
         // TODO Cleanup this crap and manage asynch log cleanly
         console.log(
-          `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
+          `POST ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status ` +
             response.status +
             response.statusText
         );
         response.json().then((respBody) => {
           throw new Error(
-            `PATCH ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status= ` +
+            `POST ${process.env.REACT_APP_BACKEND_BASE_URL}/api/activities/ return status= ` +
               response.status +
               " statusText= " +
               response.statusText +

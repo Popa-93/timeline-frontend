@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 import Avatar from "@material-ui/core/Avatar";
 import Dialog from "@material-ui/core/Dialog";
-import Input from "@material-ui/core/Input";
+
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -13,6 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 
 import ActivityAvatarEditor from "./ActivityAvatarEditor";
+import CachedInput from "./CachedInput";
 
 import PropTypes from "prop-types";
 
@@ -52,6 +53,7 @@ export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
   const classes = useStyles();
+  const avatarNameRef = useRef(null);
 
   return (
     <ClickAwayListener
@@ -112,20 +114,18 @@ export default function ActivitySelection(props) {
                         // -> Allowing inline name category'name edition
                       }}
                     >
-                      <Input
+                      <CachedInput
                         fullWidth
+                        ref={avatarNameRef}
                         disableUnderline
                         //readOnly To switch mode TODO
                         value={activity.name}
-                        onChange={
-                          //TODO
-                          (e) =>
-                            props.updateActivity(
-                              activity.id,
-                              activity.avatar,
-                              e.target.value
-                            )
-                        }
+                        onChange={(e) => {
+                          props.updateActivity({
+                            id: activity.id,
+                            name: e.target.value,
+                          });
+                        }}
                         placeholder="Titre"
                         //TODO I18N
                       />
@@ -162,12 +162,12 @@ export default function ActivitySelection(props) {
                   open={editorOpened}
                   onValidate={(newAvatar) => {
                     setEditorOpened(false);
-                    props.onClose();
-                    props.addActivity(
-                      newAvatar,
-                      "",
-                      props.updateActivityIDInRecord
-                    );
+                    props.addActivity(newAvatar, "", (activityID) => {
+                      props.updateActivityIDInRecord(activityID);
+                      console.log("avatarNameRef =", avatarNameRef);
+                      avatarNameRef.current.focus();
+                      console.log("After focus");
+                    });
                   }}
                   onClose={() => {
                     setEditorOpened(false);

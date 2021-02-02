@@ -68,7 +68,7 @@ export default function RecordItem(props) {
       });
     };
     postRecordToBackend.current = debounce(postRecord, 500);
-    return postRecordToBackend.current.cancel();
+    return () => postRecordToBackend.current.flush();
   }, []);
 
   const updateContent = (titleToSet, descriptionToSet) => {
