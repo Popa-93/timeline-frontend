@@ -102,7 +102,7 @@ export default function RecordItem(props) {
     );
   };
 
-  const updateActivityID = (activityIDToSet) => {
+  const updateActivityIDInRecord = (activityIDToSet) => {
     setActivityID(activityIDToSet);
     postRecordToBackend.current(
       props.record.timelineID,
@@ -125,7 +125,7 @@ export default function RecordItem(props) {
           <TimelineDot>
             <RecordActivity
               activityID={activityID}
-              updateActivityIDInRecord={updateActivityID}
+              updateActivityIDInRecord={updateActivityIDInRecord}
               activities={props.activities}
               addActivity={props.addActivity}
               updateActivity={props.updateActivity}
@@ -153,10 +153,10 @@ RecordItem.propTypes = {
   record: PropTypes.shape({
     timelineID: PropTypes.number.isRequired,
     id: PropTypes.number.isRequired,
-    date: PropTypes.string.isRequired,
+    date: PropTypes.instanceOf(Date).isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    activityID: PropTypes.number.isRequired,
+    activityID: PropTypes.number,
   }).isRequired,
 
   activities: PropTypes.arrayOf(PropTypes.object).isRequired,

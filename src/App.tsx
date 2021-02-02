@@ -47,7 +47,7 @@ function App() {
     //TODO    setActivities();
   };
 
-  const addActivity = (avatar, name) => {
+  const addActivity = (avatar, name, updateActivityIDInRecordCallBack) => {
     const formData = new FormData();
     formData.append("avatar", avatar);
     formData.append("name", "");
@@ -81,6 +81,8 @@ function App() {
         response.json().then((respBody) => {
           setActivities([...activities, respBody]);
           setFilter([...filter, respBody.id]);
+          //Return new activity.id to allow direct use in Record
+          updateActivityIDInRecordCallBack(respBody.id);
         });
       }
     });
@@ -192,7 +194,7 @@ function App() {
                       overflow: "auto",
                     }}
                   >
-                    {activities && (
+                    {activities && timelineID && (
                       <RecordList
                         timelineID={timelineID}
                         activities={activities}

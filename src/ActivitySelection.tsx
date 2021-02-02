@@ -162,7 +162,12 @@ export default function ActivitySelection(props) {
                   open={editorOpened}
                   onValidate={(newAvatar) => {
                     setEditorOpened(false);
-                    props.addActivity(newAvatar, "");
+                    props.onClose();
+                    props.addActivity(
+                      newAvatar,
+                      "",
+                      props.updateActivityIDInRecord
+                    );
                   }}
                   onClose={() => {
                     setEditorOpened(false);
