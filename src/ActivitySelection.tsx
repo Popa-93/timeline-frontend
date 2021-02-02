@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO Fix this => <CachedInput> PropTypes à définir
+
 import { useState, useRef } from "react";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -52,8 +55,17 @@ const useStyles = makeStyles((theme) => ({
 export default function ActivitySelection(props) {
   const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
+  const forceFocusOnActivityID = useRef(0); //0 : Uninexisting Index + Falsy
   const classes = useStyles();
-  const avatarNameRef = useRef(null);
+
+  console.log("Render ActivitySelection");
+
+  console.log("props.activities =", props.activities);
+  props.activities &&
+    console.log(
+      "props.activities..slice().reverse()=",
+      props.activities.slice().reverse()
+    );
 
   return (
     <ClickAwayListener
@@ -89,53 +101,7 @@ export default function ActivitySelection(props) {
         <span className={classes.arrow} ref={setArrowRef} />
         <Paper variant="outlined">
           <List>
-            {props.activities &&
-              props.activities.map((activity) => {
-                return (
-                  <ListItem
-                    key={activity.id}
-                    button
-                    onClick={() => {
-                      props.onClose();
-                      props.updateActivityIDInRecord(activity.id);
-                    }}
-                  >
-                    <ListItemAvatar>
-                      <Avatar src={activity.avatar}></Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // To prevent item selection in list
-                        // -> Allowing inline name category'name edition
-                      }}
-                    >
-                      <CachedInput
-                        fullWidth
-                        ref={avatarNameRef}
-                        disableUnderline
-                        //readOnly To switch mode TODO
-                        value={activity.name}
-                        onChange={(e) => {
-                          props.updateActivity({
-                            id: activity.id,
-                            name: e.target.value,
-                          });
-                        }}
-                        placeholder="Titre"
-                        //TODO I18N
-                      />
-                      {/* TODO Limit input size On all Inputs */}
-                    </ListItemText>
-                  </ListItem>
-                );
-              })}
             <ListItem
-              autoFocus
               button
               onClick={() => {
                 setEditorOpened(true);
@@ -162,11 +128,15 @@ export default function ActivitySelection(props) {
                   open={editorOpened}
                   onValidate={(newAvatar) => {
                     setEditorOpened(false);
+                    console.log("Add activity");
                     props.addActivity(newAvatar, "", (activityID) => {
+                      console.log("forceFocus ");
+                      forceFocusOnActivityID.current = activityID;
+                      console.log("forceFocus DONE");
+
+                      console.log("updateActivityIDInRecord");
                       props.updateActivityIDInRecord(activityID);
-                      console.log("avatarNameRef =", avatarNameRef);
-                      avatarNameRef.current.focus();
-                      console.log("After focus");
+                      console.log("updateActivityIDInRecord DONE");
                     });
                   }}
                   onClose={() => {
@@ -183,6 +153,67 @@ export default function ActivitySelection(props) {
               <ListItemText primary="Add category" />
               {/* //TODO I18n */}
             </ListItem>
+            {props.activities &&
+              props.activities
+                .slice()
+                .reverse()
+                .map((activity) => {
+                  //TODO
+                  // let focus = { autoFocus: false };
+                  // if (
+                  //   forceFocusOnActivityID.current &&
+                  //   activity.id === forceFocusOnActivityID.current
+                  // ) {
+                  //   focus = { autoFocus: true };
+                  //   //TODO forceFocusOnActivityID.current = 0;
+                  //   console.log("set autoFocus");
+                  // }
+
+                  return (
+                    <ListItem
+                      key={activity.id}
+                      button
+                      onClick={() => {
+                        props.onClose();
+                        props.updateActivityIDInRecord(activity.id);
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar src={activity.avatar}></Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          // To prevent item selection in list
+                          // -> Allowing inline name category'name edition
+                        }}
+                      >
+                        <CachedInput
+                          fullWidth
+                          {...(activity.id === forceFocusOnActivityID.current
+                            ? { autoFocus: true }
+                            : {})}
+                          //disableUnderline
+                          //readOnly To switch mode TODO
+                          value={activity.name}
+                          onChange={(e) => {
+                            props.updateActivity({
+                              id: activity.id,
+                              name: e.target.value,
+                            });
+                          }}
+                          placeholder="Titre"
+                          //TODO I18N
+                        />
+                        {/* TODO Limit input size On all Inputs */}
+                      </ListItemText>
+                    </ListItem>
+                  );
+                })}
           </List>
         </Paper>
       </Popper>
