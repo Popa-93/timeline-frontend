@@ -1,7 +1,7 @@
 // @ts-nocheck
 // TODO Fix this => <CachedInput> PropTypes à définir
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper";
@@ -17,6 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ActivityAvatarEditor from "./ActivityAvatarEditor";
 import CachedInput from "./CachedInput";
+import Input from "@material-ui/core/Input";
 
 import PropTypes from "prop-types";
 
@@ -53,20 +54,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ActivitySelection(props) {
-  const [arrowRef, setArrowRef] = useState(null);
   const [editorOpened, setEditorOpened] = useState(false);
-  const forceFocusOnActivityID = useRef(0); //0 : Uninexisting Index + Falsy
   const classes = useStyles();
+  const focusOnActivityID = useRef(0); //0 = Falsy + not an index
+
+  const [arrowRef, setArrowRef] = useState(null);
+  //const arrowRef = useRef(null); //TODO Fix This -> useCallback for investigation
+
+  const callbackRef = useCallback(
+    (inputElement) => {
+      console.log("callBackRef, inputElement", inputElement);
+      console.log("arrowRef, arrowRef", arrowRef);
+      //Note add condition on ArrowRef to prevent losing focus when arrowRef is initialized init
+      //Damned crappy arrowRef mechanism
+      if (inputElement && arrowRef) {
+        console.log("Focus");
+        inputElement.focus();
+        focusOnActivityID.current = 0;
+      }
+    },
+    [arrowRef]
+  );
 
   console.log("Render ActivitySelection");
-
-  console.log("props.activities =", props.activities);
-  props.activities &&
-    console.log(
-      "props.activities..slice().reverse()=",
-      props.activities.slice().reverse()
-    );
-
+  console.log("arrowRef =", arrowRef);
   return (
     <ClickAwayListener
       mouseEvent="onMouseDown"
@@ -128,15 +139,9 @@ export default function ActivitySelection(props) {
                   open={editorOpened}
                   onValidate={(newAvatar) => {
                     setEditorOpened(false);
-                    console.log("Add activity");
                     props.addActivity(newAvatar, "", (activityID) => {
-                      console.log("forceFocus ");
-                      forceFocusOnActivityID.current = activityID;
-                      console.log("forceFocus DONE");
-
-                      console.log("updateActivityIDInRecord");
+                      focusOnActivityID.current = activityID;
                       props.updateActivityIDInRecord(activityID);
-                      console.log("updateActivityIDInRecord DONE");
                     });
                   }}
                   onClose={() => {
@@ -150,7 +155,7 @@ export default function ActivitySelection(props) {
                 </Avatar>
               </ListItemAvatar>
 
-              <ListItemText primary="Add category" />
+              <ListItemText primary="Ajouter une catégorie" />
               {/* //TODO I18n */}
             </ListItem>
             {props.activities &&
@@ -158,17 +163,12 @@ export default function ActivitySelection(props) {
                 .slice()
                 .reverse()
                 .map((activity) => {
-                  //TODO
-                  // let focus = { autoFocus: false };
-                  // if (
-                  //   forceFocusOnActivityID.current &&
-                  //   activity.id === forceFocusOnActivityID.current
-                  // ) {
-                  //   focus = { autoFocus: true };
-                  //   //TODO forceFocusOnActivityID.current = 0;
-                  //   console.log("set autoFocus");
+                  // if (activity.id === focusOnActivityID.current) {
+                  //   console.log("FOCUS on ", activity.id);
+                  //   focusOnActivityID.current = 0;
+                  // } else {
+                  //   console.log("STD inputComponent");
                   // }
-
                   return (
                     <ListItem
                       key={activity.id}
@@ -193,23 +193,30 @@ export default function ActivitySelection(props) {
                         }}
                       >
                         <CachedInput
+                          inputRef={
+                            activity.id === focusOnActivityID.current &&
+                            callbackRef
+                          }
                           fullWidth
-                          {...(activity.id === forceFocusOnActivityID.current
-                            ? { autoFocus: true }
-                            : {})}
                           //disableUnderline
                           //readOnly To switch mode TODO
                           value={activity.name}
+                          onKeyPress={(event) => {
+                            console.log("onKeyPress", event.key);
+                            if (event.key === "Enter") {
+                              console.log("Validate");
+                            }
+                          }}
                           onChange={(e) => {
                             props.updateActivity({
                               id: activity.id,
                               name: e.target.value,
                             });
                           }}
-                          placeholder="Titre"
+                          placeholder="Nom"
                           //TODO I18N
+                          //{/* TODO Limit input size On all Inputs */}
                         />
-                        {/* TODO Limit input size On all Inputs */}
                       </ListItemText>
                     </ListItem>
                   );
