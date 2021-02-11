@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 export default function CachedInput(props) {
   const [val, setVal] = useState(props.value);

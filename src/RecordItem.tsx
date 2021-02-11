@@ -12,7 +12,7 @@ import RecordContent from "./RecordContent";
 import RecordDate from "./RecordDate";
 import RecordActivity from "./RecordActivity";
 
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 import jwtRefreshingFetch from "./jwtRefreshingFetch";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -122,6 +122,8 @@ export default function RecordItem(props) {
   const isOrientationLandscape = useMediaQuery("(orientation:landscape)");
 
   return (
+    //TODO .MuiTimelineItem-missingOppositeContent:before FORCE to padding : 0, flex: 0
+
     //Note: activityID = null correspond to uncategorised activity
     (activityID === null || props.filter.includes(activityID)) && (
       <TimelineItem>
@@ -130,6 +132,7 @@ export default function RecordItem(props) {
             <RecordDate date={date} updateDate={updateDate} />
           </TimelineOppositeContent>
         )}
+
         <TimelineSeparator>
           <TimelineDot>
             <RecordActivity

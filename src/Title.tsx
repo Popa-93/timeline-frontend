@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
-import { debounce } from "lodash";
+
+import debounce from "lodash/debounce";
 import { IdentContext } from "./App";
 
 import PropTypes from "prop-types";
@@ -20,6 +21,7 @@ export default function Title(props) {
           accept: "*/*",
           "content-type": "application/json",
         },
+        //TODO catch stringify potential exception
         body: JSON.stringify({
           title: "",
         }),
