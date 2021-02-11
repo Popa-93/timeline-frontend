@@ -1,3 +1,6 @@
+// @ts-nocheck
+//Issue with createMuiTheme, Material UI seems does not handle TS very well, I may dismiss TS :/
+
 import React, { useState, useEffect } from "react";
 import {
   ThemeProvider,
@@ -29,7 +32,18 @@ function App() {
   const [filter, setFilter] = useState([]); //Shared among ActivityFilter & Record rendering (applying filter)
 
   const [timelineID, setTimelineID] = useState(null);
-  let theme = createMuiTheme();
+  let theme = createMuiTheme({
+    overrides: {
+      MuiTimelineItem: {
+        missingOppositeContent: {
+          "&::before": {
+            flex: 0,
+            padding: 0,
+          },
+        },
+      },
+    },
+  });
   theme = responsiveFontSizes(theme); //TODO -> https://material-ui.com/customization/theming/
 
   //TODO Remove or use for new Record Adds?

@@ -15,6 +15,7 @@ import RecordActivity from "./RecordActivity";
 import { debounce } from "lodash";
 
 import jwtRefreshingFetch from "./jwtRefreshingFetch";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 export default function RecordItem(props) {
   const [date, setDate] = useState(props.record.date);
@@ -118,14 +119,17 @@ export default function RecordItem(props) {
       activityIDToSet
     );
   };
+  const isOrientationLandscape = useMediaQuery("(orientation:landscape)");
 
   return (
     //Note: activityID = null correspond to uncategorised activity
     (activityID === null || props.filter.includes(activityID)) && (
       <TimelineItem>
-        <TimelineOppositeContent>
-          <RecordDate date={date} updateDate={updateDate} />
-        </TimelineOppositeContent>
+        {isOrientationLandscape && (
+          <TimelineOppositeContent>
+            <RecordDate date={date} updateDate={updateDate} />
+          </TimelineOppositeContent>
+        )}
         <TimelineSeparator>
           <TimelineDot>
             <RecordActivity
@@ -139,6 +143,9 @@ export default function RecordItem(props) {
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
+          {!isOrientationLandscape && (
+            <RecordDate date={date} updateDate={updateDate} />
+          )}
           <RecordContent
             timelineID={props.record.timelineID}
             recordID={props.record.id}

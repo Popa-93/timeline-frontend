@@ -12,6 +12,7 @@ import compareAsc from "date-fns/compareAsc";
 import { IdentContext } from "./App";
 import RecordItem from "./RecordItem";
 import jwtRefreshingFetch from "./jwtRefreshingFetch";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -25,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
   },
   recordlist: {
+    "@media (orientation: landscape)": {
+      backgroudColor: "red",
+    },
+    "@media (orientation: portrait)": {
+      backgroudColor: "blue",
+    },
     marginLeft: theme.spacing(1),
   },
 }));
@@ -101,9 +108,12 @@ function RecordList(props) {
     if (!ident) {
       setRecords(null);
     } else {
-      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/`, {
-        credentials: "include",
-      })
+      jwtRefreshingFetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/`,
+        {
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then(
           (res) => {
@@ -142,8 +152,7 @@ function RecordList(props) {
         </Fab>
       </Tooltip>
       <Timeline
-        align="alternate"
-        style={{ backgroundColor: "green" }} //TODO Remove
+        align={useMediaQuery("(orientation:landscape)") ? "alternate" : "left"}
       >
         {records &&
           records
