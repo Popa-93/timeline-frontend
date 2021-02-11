@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,6 +11,7 @@ import compareAsc from "date-fns/compareAsc";
 
 import { IdentContext } from "./App";
 import RecordItem from "./RecordItem";
+import jwtRefreshingFetch from "./jwtRefreshingFetch";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -32,6 +33,7 @@ function RecordList(props) {
   const { ident } = useContext(IdentContext);
   const [records, setRecords] = useState([]);
   const classes = useStyles();
+  const focusOnRecordID = useRef(0); //0 = Falsy + not an index
 
   //const [isLoading, setIsLoading] = useState(false); //TODO add loading spinner
 
@@ -45,21 +47,23 @@ function RecordList(props) {
 
   const addRecord = () => {
     //Create an empty newRecord in DB (needed to enable inline editeding in lower components)
-    console.log("Create New Record");
-    fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        accept: "*/*",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        timelineID: props.timelineID,
-        title: "",
-        description: "",
-        //activityID: activity,
-      }),
-    }).then((response) => {
+    jwtRefreshingFetch(
+      `${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          accept: "*/*",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          timelineID: props.timelineID,
+          title: "",
+          description: "",
+          //activityID: activity,
+        }),
+      }
+    ).then((response) => {
       if (!response.ok) {
         // TODO Cleanup this crap and manage asynch log cleanly
         //response.text().then((text) => console.log(text));
@@ -76,6 +80,7 @@ function RecordList(props) {
       } else {
         //RecordList.tsx:65 {"id":5,"title":"","date":"2021-01-31","description":"","activityID":null,"timelineID":1}
         response.json().then((respBody) => {
+          focusOnRecordID.current = respBody.id;
           setRecords([convertRecordDate(respBody), ...records]);
         });
       }
@@ -160,6 +165,8 @@ function RecordList(props) {
                 addActivity={props.addActivity}
                 updateActivity={props.updateActivity}
                 filter={props.filter}
+                focusOnRecordID={focusOnRecordID.current}
+                setFocusOnRecord={(id) => (focusOnRecordID.current = id)}
                 updateRecord={(updatedRecord) => {
                   setRecords(
                     records.map((record) =>

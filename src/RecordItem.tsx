@@ -14,6 +14,8 @@ import RecordActivity from "./RecordActivity";
 
 import { debounce } from "lodash";
 
+import jwtRefreshingFetch from "./jwtRefreshingFetch";
+
 export default function RecordItem(props) {
   const [date, setDate] = useState(props.record.date);
   const [title, setTitle] = useState(props.record.title);
@@ -39,7 +41,7 @@ export default function RecordItem(props) {
         date.getMonth() + 1
       )}-${twoDigitFormater.format(date.getDate())}`;
 
-      fetch(
+      jwtRefreshingFetch(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/${recordID}/`,
         {
           method: "PATCH",
@@ -59,6 +61,9 @@ export default function RecordItem(props) {
       ).then((response) => {
         if (!response.ok) {
           // TODO Cleanup this crap and manage asynch log cleanly
+
+          //Manage Fetch http://localhost:8000/api/records/ return status 401Unauthorized
+
           throw new Error(
             `Fetch ${process.env.REACT_APP_BACKEND_BASE_URL}/api/records/ return status ` +
               response.status +
@@ -142,6 +147,14 @@ export default function RecordItem(props) {
             description={description}
             setDescription={setDescription}
             updateContent={updateContent}
+            isFocussed={() => {
+              if (props.record.id === props.focusOnRecordID) {
+                props.setFocusOnRecord(0);
+                return true;
+              } else {
+                return false;
+              }
+            }}
           />
         </TimelineContent>
       </TimelineItem>
@@ -164,4 +177,6 @@ RecordItem.propTypes = {
   updateActivity: PropTypes.func.isRequired,
   filter: PropTypes.arrayOf(PropTypes.number),
   updateRecord: PropTypes.func.isRequired,
+  focusOnRecordID: PropTypes.number.isRequired,
+  setFocusOnRecord: PropTypes.func.isRequired,
 };

@@ -2,8 +2,7 @@
 // TODO Fix this
 
 import { useState, useRef, useEffect } from "react";
-import Input from "@material-ui/core/Input";
-
+import TextField from "@material-ui/core/TextField";
 import { debounce } from "lodash";
 
 export default function CachedInput(props) {
@@ -22,13 +21,15 @@ export default function CachedInput(props) {
   }, [props]);
 
   return (
-    <Input
+    <TextField
       {...props}
       value={val}
+      //error={val.length < 1}
+      //helperText={val.length < 1 ? "Champ obligatoire" : false}
       onChange={(e) => {
         setVal(e.target.value);
         parentOnChangeRef.current(e);
       }}
-    ></Input>
+    />
   );
 }

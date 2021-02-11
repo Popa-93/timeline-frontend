@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -21,7 +21,13 @@ const useStyles = makeStyles((theme) => ({
 export default function RecordContent(props) {
   const classes = useStyles();
   const editable = true; //TODO Manage public/private view
-
+  const callbackRefFocus = useCallback((inputElement) => {
+    //Note add condition on ArrowRef to prevent losing focus when arrowRef is initialized init
+    //Damned crappy arrowRef mechanism
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
   function changeTitle(e) {
     props.setTitle(e.target.value);
     props.updateContent(e.target.value, props.description);
@@ -36,13 +42,13 @@ export default function RecordContent(props) {
     return (
       <Paper variant="outlined" className={classes.itemcontent}>
         <Input
+          inputRef={props.isFocussed() && callbackRefFocus}
           className={classes.titleInput}
           fullWidth
-          disableUnderline
           //readOnly To switch mode TODO
           value={props.title}
           onChange={changeTitle}
-          placeholder="Titre"
+          placeholder="Mon activité"
         />
         <Input
           fullWidth
@@ -57,10 +63,7 @@ export default function RecordContent(props) {
     );
   } else {
     return (
-      <Paper
-        variant="outlined"
-        className={classes.itemcontent}
-      >
+      <Paper variant="outlined" className={classes.itemcontent}>
         <Typography variant="h6" component="h1">
           {props.title}
         </Typography>
@@ -78,4 +81,5 @@ RecordContent.propTypes = {
   description: PropTypes.string.isRequired,
   setDescription: PropTypes.func.isRequired,
   updateContent: PropTypes.func.isRequired,
+  isFocussed: PropTypes.func.isRequired,
 };

@@ -17,7 +17,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ActivityAvatarEditor from "./ActivityAvatarEditor";
 import CachedInput from "./CachedInput";
-import Input from "@material-ui/core/Input";
 
 import PropTypes from "prop-types";
 
@@ -57,27 +56,19 @@ export default function ActivitySelection(props) {
   const [editorOpened, setEditorOpened] = useState(false);
   const classes = useStyles();
   const focusOnActivityID = useRef(0); //0 = Falsy + not an index
-
   const [arrowRef, setArrowRef] = useState(null);
-  //const arrowRef = useRef(null); //TODO Fix This -> useCallback for investigation
 
   const callbackRef = useCallback(
     (inputElement) => {
-      console.log("callBackRef, inputElement", inputElement);
-      console.log("arrowRef, arrowRef", arrowRef);
       //Note add condition on ArrowRef to prevent losing focus when arrowRef is initialized init
       //Damned crappy arrowRef mechanism
       if (inputElement && arrowRef) {
-        console.log("Focus");
         inputElement.focus();
-        focusOnActivityID.current = 0;
       }
     },
     [arrowRef]
   );
 
-  console.log("Render ActivitySelection");
-  console.log("arrowRef =", arrowRef);
   return (
     <ClickAwayListener
       mouseEvent="onMouseDown"
@@ -127,6 +118,7 @@ export default function ActivitySelection(props) {
                 aria-labelledby="Avatar editor"
                 open={editorOpened}
                 onClose={() => {
+                  focusOnActivityID.current = 0;
                   setEditorOpened(false);
                 }}
                 onClick={(e) => {
@@ -198,13 +190,14 @@ export default function ActivitySelection(props) {
                             callbackRef
                           }
                           fullWidth
-                          //disableUnderline
-                          //readOnly To switch mode TODO
                           value={activity.name}
                           onKeyPress={(event) => {
-                            console.log("onKeyPress", event.key);
-                            if (event.key === "Enter") {
-                              console.log("Validate");
+                            if (
+                              event.key === "Enter" &&
+                              focusOnActivityID.current
+                            ) {
+                              focusOnActivityID.current = 0;
+                              props.onClose();
                             }
                           }}
                           onChange={(e) => {
@@ -213,7 +206,11 @@ export default function ActivitySelection(props) {
                               name: e.target.value,
                             });
                           }}
-                          placeholder="Nom"
+                          onBlur={() => {
+                            console.log("BLUR TODO");
+                            focusOnActivityID.current = 0;
+                          }}
+                          placeholder="Nom de la catégorie"
                           //TODO I18N
                           //{/* TODO Limit input size On all Inputs */}
                         />

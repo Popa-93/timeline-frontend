@@ -133,7 +133,7 @@ export default function Title(props) {
         fullWidth
         value={title}
         onChange={changeTitle}
-        placeholder="Titre de la timeline"
+        placeholder="Titre"
         inputProps={{ "aria-label": "Titre de la timeline" }}
       />
     );

@@ -11,6 +11,7 @@ import { spacing } from "@material-ui/system";
 import { IdentContext } from "./App";
 
 import PropTypes from "prop-types";
+import jwtRefreshingFetch from "./jwtRefreshingFetch";
 
 const StyledTypography = styled(Typography)(spacing);
 const StyledButton = styled(Button)(spacing);
@@ -30,15 +31,18 @@ export default function LogoutDialog(props) {
   const { signOut } = useGoogleLogout({
     clientId: process.env.REACT_APP_GOOGLE_APP_CLIENTID,
     onLogoutSuccess: () => {
-      fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/logout/`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          accept: "*/*",
-          "content-type": "application/json",
-        },
-        body: "{}",
-      })
+      jwtRefreshingFetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/logout/`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            accept: "*/*",
+            "content-type": "application/json",
+          },
+          body: "{}",
+        }
+      )
         .then((response) => {
           if (!response.ok) {
             // TODO Cleanup this crap and manage asynch log cleanly
